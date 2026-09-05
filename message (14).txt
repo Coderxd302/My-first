@@ -1,6 +1,6 @@
 VIN9 = {
     Silent = {
-        ["Enabled"] = false,
+        ["Enabled"] = true,
         ["Prediction"] = 0.129,
         ["Part"] = "HumanoidRootPart",
         
@@ -54,17 +54,17 @@ local DrawingCircle2 = Drawing.new("Circle")
 CircleDrawing.Color = Color3.fromRGB(255,255,255)
 CircleDrawing.Thickness = 1
 CircleDrawing.NumSides = 9e9
-CircleDrawing.Radius = 50*3
+CircleDrawing.Radius = 200
 CircleDrawing.Transparency = 0.4
-CircleDrawing.Visible = false
+CircleDrawing.Visible = true
 CircleDrawing.Filled = false
 
 DrawingCircle2.Color = Color3.fromRGB(255,255,255)
 DrawingCircle2.Thickness = 1
 DrawingCircle2.NumSides = 9e9
-DrawingCircle2.Radius = 50*3
+DrawingCircle2.Radius = 200
 DrawingCircle2.Transparency = 0.4
-DrawingCircle2.Visible = false
+DrawingCircle2.Visible = true
 DrawingCircle2.Filled = false
 
 game:GetService("RunService").Heartbeat:Connect(function()
