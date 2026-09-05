@@ -1,0 +1,2313 @@
+local u1 = 'HumanoidRootPart'
+local u2 = 'UpperTorso'
+local u3 = 'x'
+local u4 = 30
+local u5 = true
+local u6 = true
+local u7 = false
+local u8 = false
+local u9 = 0
+local u10 = false
+local u11 = false
+local u12 = 0.015
+local _Players = game:GetService('Players')
+local _UserInputService = game:GetService('UserInputService')
+local _RunService = game:GetService('RunService')
+
+game:GetService('StarterGui')
+
+local _LocalPlayer = _Players.LocalPlayer
+local u17 = _Players.LocalPlayer:GetMouse()
+local _CurrentCamera = workspace.CurrentCamera
+local _new = CFrame.new
+local _ = Ray.new
+local _ = Vector3.new
+local _ = Vector2.new
+local u20 = false
+local u21 = false
+local u22 = false
+local u23 = nil
+
+local function u50()
+    local v24 = _Players
+    local v25, v26, v27 = pairs(v24:GetPlayers())
+    local v28 = {}
+    local v29 = {}
+    local v30 = {}
+
+    while true do
+        local v31
+
+        v27, v31 = v25(v26, v27)
+
+        if v27 == nil then
+            break
+        end
+        if v31 ~= _LocalPlayer then
+            table.insert(v28, v31)
+        end
+    end
+
+    local v32, v33, v34 = pairs(v28)
+
+    while true do
+        local v35
+
+        v34, v35 = v32(v33, v34)
+
+        if v34 == nil then
+            break
+        end
+        if v35.Character ~= nil then
+            local _Head = v35.Character:FindFirstChild('Head')
+
+            if u7 ~= true or v35.Team == _LocalPlayer.Team then
+                if u7 == false and v35.Team == _LocalPlayer.Team then
+                    local _magnitude = (v35.Character:FindFirstChild('Head').Position - game.Workspace.CurrentCamera.CFrame.p).magnitude
+                    local v38 = Ray.new(game.Workspace.CurrentCamera.CFrame.p, (u17.Hit.p - game.Workspace.CurrentCamera.CFrame.p).unit * _magnitude)
+                    local _, v39 = game.Workspace:FindPartOnRay(v38, game.Workspace)
+                    local v40 = math.floor((v39 - _Head.Position).magnitude)
+
+                    v29[v35.Name .. v34] = {}
+                    v29[v35.Name .. v34].dist = _magnitude
+                    v29[v35.Name .. v34].plr = v35
+                    v29[v35.Name .. v34].diff = v40
+
+                    table.insert(v30, v40)
+                end
+            else
+                local _magnitude2 = (v35.Character:FindFirstChild('Head').Position - game.Workspace.CurrentCamera.CFrame.p).magnitude
+                local v42 = Ray.new(game.Workspace.CurrentCamera.CFrame.p, (u17.Hit.p - game.Workspace.CurrentCamera.CFrame.p).unit * _magnitude2)
+                local _, v43 = game.Workspace:FindPartOnRay(v42, game.Workspace)
+                local v44 = math.floor((v43 - _Head.Position).magnitude)
+
+                v29[v35.Name .. v34] = {}
+                v29[v35.Name .. v34].dist = _magnitude2
+                v29[v35.Name .. v34].plr = v35
+                v29[v35.Name .. v34].diff = v44
+
+                table.insert(v30, v44)
+            end
+        end
+    end
+
+    if unpack(v30) == nil then
+        return nil
+    end
+
+    local v45 = math.floor(math.min(unpack(v30)))
+
+    if u4 < v45 then
+        return nil
+    end
+
+    local v46, v47, v48 = pairs(v29)
+
+    while true do
+        local v49
+
+        v48, v49 = v46(v47, v48)
+
+        if v48 == nil then
+            break
+        end
+        if v49.diff == v45 then
+            return v49.plr
+        end
+    end
+
+    return nil
+end
+
+u17.KeyDown:Connect(function(p51)
+    if not _UserInputService:GetFocusedTextBox() then
+        if p51 ~= u3 or u23 ~= nil then
+            if p51 == u3 and u23 ~= nil then
+                if u23 ~= nil then
+                    u23 = nil
+                end
+                if u21 ~= false then
+                    u21 = false
+                end
+            end
+        else
+            pcall(function()
+                if u21 ~= true then
+                    u21 = true
+                end
+
+                local v52 = u50()
+
+                if v52 ~= nil then
+                    u23 = v52
+                end
+            end)
+        end
+    end
+end)
+_RunService.RenderStepped:Connect(function()
+    if u5 ~= true or u6 ~= true then
+        if u5 ~= true or u6 ~= false then
+            if u5 == false and u6 == true then
+                if (_CurrentCamera.Focus.p - _CurrentCamera.CoordinateFrame.p).Magnitude > 1 then
+                    u22 = false
+                else
+                    u22 = true
+                end
+            end
+        elseif (_CurrentCamera.Focus.p - _CurrentCamera.CoordinateFrame.p).Magnitude <= 1 then
+            u22 = false
+        else
+            u22 = true
+        end
+    elseif (_CurrentCamera.Focus.p - _CurrentCamera.CoordinateFrame.p).Magnitude > 1 or (_CurrentCamera.Focus.p - _CurrentCamera.CoordinateFrame.p).Magnitude <= 1 then
+        u22 = true
+    else
+        u22 = false
+    end
+    if u20 == true and (u21 == true and (u23 and u23.Character)) and (u23.Character:FindFirstChild(u2) and (u6 == true and u22 == true)) then
+        if u8 ~= true then
+            if u8 == false then
+                if u11 ~= true then
+                    _CurrentCamera.CFrame = _new(_CurrentCamera.CFrame.p, u23.Character[u2].Position)
+                else
+                    local v53 = _new(_CurrentCamera.CFrame.p, u23.Character[u2].Position)
+
+                    _CurrentCamera.CFrame = _CurrentCamera.CFrame:Lerp(v53, u12, Enum.EasingStyle.Bounce, Enum.EasingDirection.InOut)
+                end
+            end
+        elseif u11 ~= true then
+            _CurrentCamera.CFrame = _new(_CurrentCamera.CFrame.p, u23.Character[u2].Position + u23.Character[u2].Velocity * u9)
+        else
+            local v54 = _new(_CurrentCamera.CFrame.p, u23.Character[u2].Position + u23.Character[u2].Velocity * u9)
+
+            _CurrentCamera.CFrame = _CurrentCamera.CFrame:Lerp(v54, u12, Enum.EasingStyle.Bounce, Enum.EasingDirection.InOut)
+        end
+    end
+    if u10 == true then
+        if u23.Character.Humanoid.FloorMaterial ~= Enum.Material.Air then
+            u2 = u1
+        else
+            u2 = 'RightFeet'
+        end
+    end
+end)
+
+local _ScreenGui = Instance.new('ScreenGui')
+local _Frame = Instance.new('Frame')
+local _UICorner = Instance.new('UICorner')
+local _UIStroke = Instance.new('UIStroke')
+local _ImageLabel = Instance.new('ImageLabel')
+local _Frame2 = Instance.new('Frame')
+local _TextButton = Instance.new('TextButton')
+local _TextButton2 = Instance.new('TextButton')
+local _Frame3 = Instance.new('Frame')
+local _TextLabel = Instance.new('TextLabel')
+local _Frame4 = Instance.new('Frame')
+local _UICorner2 = Instance.new('UICorner')
+local _TextButton3 = Instance.new('TextButton')
+local _UICorner3 = Instance.new('UICorner')
+local _TextLabel2 = Instance.new('TextLabel')
+local _Frame5 = Instance.new('Frame')
+local _Frame6 = Instance.new('Frame')
+local _UICorner4 = Instance.new('UICorner')
+local _UIStroke2 = Instance.new('UIStroke')
+local _TextLabel3 = Instance.new('TextLabel')
+local _TextLabel4 = Instance.new('TextLabel')
+local _Frame7 = Instance.new('Frame')
+local _Frame8 = Instance.new('Frame')
+local _UICorner5 = Instance.new('UICorner')
+local _UIStroke3 = Instance.new('UIStroke')
+local _TextLabel5 = Instance.new('TextLabel')
+local _TextLabel6 = Instance.new('TextLabel')
+local _Frame9 = Instance.new('Frame')
+local _UICorner6 = Instance.new('UICorner')
+local _TextButton4 = Instance.new('TextButton')
+local _UICorner7 = Instance.new('UICorner')
+local _TextLabel7 = Instance.new('TextLabel')
+local _Frame10 = Instance.new('Frame')
+local _UICorner8 = Instance.new('UICorner')
+local _TextButton5 = Instance.new('TextButton')
+local _UICorner9 = Instance.new('UICorner')
+local _TextLabel8 = Instance.new('TextLabel')
+local _Frame11 = Instance.new('Frame')
+local _UICorner10 = Instance.new('UICorner')
+local _TextButton6 = Instance.new('TextButton')
+local _UICorner11 = Instance.new('UICorner')
+local _TextLabel9 = Instance.new('TextLabel')
+local _TextBox = Instance.new('TextBox')
+local _TextLabel10 = Instance.new('TextLabel')
+local _TextLabel11 = Instance.new('TextLabel')
+local _ImageButton = Instance.new('ImageButton')
+local _Frame12 = Instance.new('Frame')
+local _TextButton7 = Instance.new('TextButton')
+local _TextButton8 = Instance.new('TextButton')
+local _TextButton9 = Instance.new('TextButton')
+local _TextButton10 = Instance.new('TextButton')
+local _TextButton11 = Instance.new('TextButton')
+local _TextLabel12 = Instance.new('TextLabel')
+local _TextLabel13 = Instance.new('TextLabel')
+local _ImageButton2 = Instance.new('ImageButton')
+local _Frame13 = Instance.new('Frame')
+local _TextButton12 = Instance.new('TextButton')
+local _TextButton13 = Instance.new('TextButton')
+local _TextLabel14 = Instance.new('TextLabel')
+local _Frame14 = Instance.new('Frame')
+local _UICorner12 = Instance.new('UICorner')
+local _TextButton14 = Instance.new('TextButton')
+local _UICorner13 = Instance.new('UICorner')
+local _TextLabel15 = Instance.new('TextLabel')
+local _Frame15 = Instance.new('Frame')
+local _UICorner14 = Instance.new('UICorner')
+local _TextButton15 = Instance.new('TextButton')
+local _UICorner15 = Instance.new('UICorner')
+local _Frame16 = Instance.new('Frame')
+local _ImageLabel2 = Instance.new('ImageLabel')
+local _UICorner16 = Instance.new('UICorner')
+local _UIStroke4 = Instance.new('UIStroke')
+local _TextBox2 = Instance.new('TextBox')
+local _TextLabel16 = Instance.new('TextLabel')
+local _TextLabel17 = Instance.new('TextLabel')
+local _TextLabel18 = Instance.new('TextLabel')
+local _TextLabel19 = Instance.new('TextLabel')
+local _TextLabel20 = Instance.new('TextLabel')
+local _TextButton16 = Instance.new('TextButton')
+local _TextButton17 = Instance.new('TextButton')
+local _TextButton18 = Instance.new('TextButton')
+local _TextButton19 = Instance.new('TextButton')
+local _Frame17 = Instance.new('Frame')
+local _TextLabel21 = Instance.new('TextLabel')
+local _Frame18 = Instance.new('Frame')
+local _UICorner17 = Instance.new('UICorner')
+local _TextButton20 = Instance.new('TextButton')
+local _UICorner18 = Instance.new('UICorner')
+local _TextLabel22 = Instance.new('TextLabel')
+local _Frame19 = Instance.new('Frame')
+local _UICorner19 = Instance.new('UICorner')
+local _TextButton21 = Instance.new('TextButton')
+local _UICorner20 = Instance.new('UICorner')
+local _TextLabel23 = Instance.new('TextLabel')
+local _Frame20 = Instance.new('Frame')
+local _UICorner21 = Instance.new('UICorner')
+local _TextButton22 = Instance.new('TextButton')
+local _UICorner22 = Instance.new('UICorner')
+local _TextLabel24 = Instance.new('TextLabel')
+local _Frame21 = Instance.new('Frame')
+local _UICorner23 = Instance.new('UICorner')
+local _TextButton23 = Instance.new('TextButton')
+local _UICorner24 = Instance.new('UICorner')
+local _TextLabel25 = Instance.new('TextLabel')
+local _Frame22 = Instance.new('Frame')
+local _UICorner25 = Instance.new('UICorner')
+local _TextButton24 = Instance.new('TextButton')
+local _UICorner26 = Instance.new('UICorner')
+local _TextLabel26 = Instance.new('TextLabel')
+local _Frame23 = Instance.new('Frame')
+local _UICorner27 = Instance.new('UICorner')
+local _TextButton25 = Instance.new('TextButton')
+local _UICorner28 = Instance.new('UICorner')
+local _TextButton26 = Instance.new('TextButton')
+local _Frame24 = Instance.new('Frame')
+local _TextLabel27 = Instance.new('TextLabel')
+local _Frame25 = Instance.new('Frame')
+local _UICorner29 = Instance.new('UICorner')
+local _TextButton27 = Instance.new('TextButton')
+local _UICorner30 = Instance.new('UICorner')
+local _TextLabel28 = Instance.new('TextLabel')
+local _Frame26 = Instance.new('Frame')
+local _UICorner31 = Instance.new('UICorner')
+local _TextButton28 = Instance.new('TextButton')
+local _UICorner32 = Instance.new('UICorner')
+local _TextLabel29 = Instance.new('TextLabel')
+local _Frame27 = Instance.new('Frame')
+local _UICorner33 = Instance.new('UICorner')
+local _TextButton29 = Instance.new('TextButton')
+local _UICorner34 = Instance.new('UICorner')
+
+_ScreenGui.Name = 'DX9Ware'
+_ScreenGui.Parent = game.CoreGui
+_ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+_Frame.Name = 'DX9WARE_Frame'
+_Frame.Parent = _ScreenGui
+_Frame.AnchorPoint = Vector2.new(0.5, 0.5)
+_Frame.BackgroundColor3 = Color3.fromRGB(14, 14, 14)
+_Frame.BorderColor3 = Color3.fromRGB(102, 102, 102)
+_Frame.Position = UDim2.new(0.499366522, 0, 0.49917531, 0)
+_Frame.Size = UDim2.new(0, 491, 0, 601)
+_UICorner.CornerRadius = UDim.new(0, 2)
+_UICorner.Parent = _Frame
+_UIStroke.Parent = _Frame
+_UIStroke.Color = Color3.fromRGB(106, 106, 106)
+_UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+_ImageLabel.Name = 'Logo'
+_ImageLabel.Parent = _Frame
+_ImageLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_ImageLabel.BackgroundTransparency = 1
+_ImageLabel.Position = UDim2.new(0.417515278, 0, 0, 0)
+_ImageLabel.Size = UDim2.new(0, 80, 0, 67)
+_ImageLabel.Image = 'rbxassetid://12556702900'
+_ImageLabel.ScaleType = Enum.ScaleType.Fit
+_Frame2.Name = 'Line'
+_Frame2.Parent = _Frame
+_Frame2.BackgroundColor3 = Color3.fromRGB(75, 0, 115)
+_Frame2.BorderSizePixel = 0
+_Frame2.Position = UDim2.new(0.00610997993, 0, 0.151414305, 0)
+_Frame2.Size = UDim2.new(0, 485, 0, 1)
+_TextButton.Name = 'AimbotButton'
+_TextButton.Parent = _Frame
+_TextButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton.BackgroundTransparency = 1
+_TextButton.Position = UDim2.new(0.00610995293, 0, 0.12479198, 0)
+_TextButton.Size = UDim2.new(0, 60, 0, 17)
+_TextButton.Font = Enum.Font.Gotham
+_TextButton.Text = 'Aimbot'
+_TextButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton.TextSize = 16
+_TextButton2.Name = 'TargetButton'
+_TextButton2.Parent = _Frame
+_TextButton2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton2.BackgroundTransparency = 1
+_TextButton2.Position = UDim2.new(0.129724622, 0, 0.12479198, 0)
+_TextButton2.Size = UDim2.new(0, 60, 0, 17)
+_TextButton2.Font = Enum.Font.Gotham
+_TextButton2.Text = 'Target'
+_TextButton2.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton2.TextSize = 16
+_Frame3.Name = 'AimbotPage'
+_Frame3.Parent = _Frame
+_Frame3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_Frame3.BackgroundTransparency = 1
+_Frame3.Position = UDim2.new(0.00999999978, 0, 0.158000007, 0)
+_Frame3.Size = UDim2.new(0, 483, 0, 503)
+_TextLabel.Name = 'Text1'
+_TextLabel.Parent = _Frame3
+_TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel.BackgroundTransparency = 1
+_TextLabel.BorderSizePixel = 0
+_TextLabel.Position = UDim2.new(0.095238097, 0, 0.00596421491, 0)
+_TextLabel.Size = UDim2.new(0, 64, 0, 20)
+_TextLabel.Font = Enum.Font.Gotham
+_TextLabel.Text = 'Enable'
+_TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel.TextSize = 14
+_TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+_Frame4.Name = 'Circle1'
+_Frame4.Parent = _TextLabel
+_Frame4.BackgroundColor3 = Color3.fromRGB(63, 63, 63)
+_Frame4.BorderSizePixel = 0
+_Frame4.Position = UDim2.new(-0.75, 0, 0, 0)
+_Frame4.Size = UDim2.new(0, 40, 0, 20)
+_UICorner2.CornerRadius = UDim.new(0, 100)
+_UICorner2.Parent = _Frame4
+_TextButton3.Name = 'Toggle1'
+_TextButton3.Parent = _Frame4
+_TextButton3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton3.BorderSizePixel = 0
+_TextButton3.Size = UDim2.new(0, 20, 0, 20)
+_TextButton3.Font = Enum.Font.SourceSans
+_TextButton3.Text = ''
+_TextButton3.TextColor3 = Color3.fromRGB(0, 0, 0)
+_TextButton3.TextSize = 14
+_UICorner3.CornerRadius = UDim.new(0, 100)
+_UICorner3.Parent = _TextButton3
+_TextLabel2.Name = 'Text2'
+_TextLabel2.Parent = _Frame3
+_TextLabel2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel2.BackgroundTransparency = 1
+_TextLabel2.Position = UDim2.new(0.636865795, 0, 0.0775347948, 0)
+_TextLabel2.Size = UDim2.new(0, 67, 0, 4)
+_TextLabel2.Font = Enum.Font.Gotham
+_TextLabel2.Text = 'Prediction'
+_TextLabel2.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel2.TextSize = 13
+_TextLabel2.TextXAlignment = Enum.TextXAlignment.Left
+_Frame5.Name = 'Slider1'
+_Frame5.Parent = _TextLabel2
+_Frame5.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+_Frame5.BorderColor3 = Color3.fromRGB(75, 0, 115)
+_Frame5.BorderSizePixel = 0
+_Frame5.Position = UDim2.new(-4.61253691, 0, -0.22240448, 0)
+_Frame5.Size = UDim2.new(0, 303, 0, 4)
+_Frame6.Name = 'Handle1'
+_Frame6.Parent = _Frame5
+_Frame6.BackgroundColor3 = Color3.fromRGB(14, 14, 14)
+_Frame6.BackgroundTransparency = 0.95
+_Frame6.BorderSizePixel = 0
+_Frame6.Position = UDim2.new(-2.38418579e-7, 0, -1.25, 0)
+_Frame6.Size = UDim2.new(0, 15, 0, 15)
+_UICorner4.CornerRadius = UDim.new(0, 100)
+_UICorner4.Parent = _Frame6
+_UIStroke2.Parent = _Frame6
+_UIStroke2.Color = Color3.fromRGB(75, 0, 115)
+_UIStroke2.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+_TextLabel3.Name = 'PredictionValue'
+_TextLabel3.Parent = _Frame5
+_TextLabel3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel3.BackgroundTransparency = 1
+_TextLabel3.Position = UDim2.new(0.463650942, 0, 1.05964231, 0)
+_TextLabel3.Size = UDim2.new(0, 20, 0, 20)
+_TextLabel3.Font = Enum.Font.SourceSans
+_TextLabel3.Text = '0'
+_TextLabel3.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel3.TextSize = 13
+_TextLabel4.Name = 'Text3'
+_TextLabel4.Parent = _Frame3
+_TextLabel4.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel4.BackgroundTransparency = 1
+_TextLabel4.Position = UDim2.new(0.636865795, 0, 0.139165014, 0)
+_TextLabel4.Size = UDim2.new(0, 67, 0, 4)
+_TextLabel4.Font = Enum.Font.Gotham
+_TextLabel4.Text = 'Smoothness'
+_TextLabel4.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel4.TextSize = 13
+_TextLabel4.TextXAlignment = Enum.TextXAlignment.Left
+_Frame7.Name = 'Slider2'
+_Frame7.Parent = _TextLabel4
+_Frame7.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+_Frame7.BorderColor3 = Color3.fromRGB(75, 0, 115)
+_Frame7.BorderSizePixel = 0
+_Frame7.Position = UDim2.new(-4.61253691, 0, -0.22240448, 0)
+_Frame7.Size = UDim2.new(0, 303, 0, 4)
+_Frame8.Name = 'Handle2'
+_Frame8.Parent = _Frame7
+_Frame8.BackgroundColor3 = Color3.fromRGB(14, 14, 14)
+_Frame8.BackgroundTransparency = 0.95
+_Frame8.BorderSizePixel = 0
+_Frame8.Position = UDim2.new(-2.38418579e-7, 0, -1.25, 0)
+_Frame8.Size = UDim2.new(0, 15, 0, 15)
+_UICorner5.CornerRadius = UDim.new(0, 100)
+_UICorner5.Parent = _Frame8
+_UIStroke3.Parent = _Frame8
+_UIStroke3.Color = Color3.fromRGB(75, 0, 115)
+_UIStroke3.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+_TextLabel5.Name = 'SmoothnessValue'
+_TextLabel5.Parent = _Frame7
+_TextLabel5.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel5.BackgroundTransparency = 1
+_TextLabel5.Position = UDim2.new(0.463650942, 0, 1.05964231, 0)
+_TextLabel5.Size = UDim2.new(0, 20, 0, 20)
+_TextLabel5.Font = Enum.Font.SourceSans
+_TextLabel5.Text = '0'
+_TextLabel5.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel5.TextSize = 13
+_TextLabel6.Name = 'Text4'
+_TextLabel6.Parent = _Frame3
+_TextLabel6.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel6.BackgroundTransparency = 1
+_TextLabel6.BorderSizePixel = 0
+_TextLabel6.Position = UDim2.new(0.0952380896, 0, 0.184890687, 0)
+_TextLabel6.Size = UDim2.new(0, 64, 0, 20)
+_TextLabel6.Font = Enum.Font.Gotham
+_TextLabel6.Text = 'Enable Prediction'
+_TextLabel6.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel6.TextSize = 14
+_TextLabel6.TextXAlignment = Enum.TextXAlignment.Left
+_Frame9.Name = 'Circle2'
+_Frame9.Parent = _TextLabel6
+_Frame9.BackgroundColor3 = Color3.fromRGB(63, 63, 63)
+_Frame9.BorderSizePixel = 0
+_Frame9.Position = UDim2.new(-0.75, 0, 0, 0)
+_Frame9.Size = UDim2.new(0, 40, 0, 20)
+_UICorner6.CornerRadius = UDim.new(0, 100)
+_UICorner6.Parent = _Frame9
+_TextButton4.Name = 'Toggle2'
+_TextButton4.Parent = _Frame9
+_TextButton4.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton4.BorderSizePixel = 0
+_TextButton4.Size = UDim2.new(0, 20, 0, 20)
+_TextButton4.Font = Enum.Font.SourceSans
+_TextButton4.Text = ''
+_TextButton4.TextColor3 = Color3.fromRGB(0, 0, 0)
+_TextButton4.TextSize = 14
+_UICorner7.CornerRadius = UDim.new(0, 100)
+_UICorner7.Parent = _TextButton4
+_TextLabel7.Name = 'Text5'
+_TextLabel7.Parent = _Frame3
+_TextLabel7.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel7.BackgroundTransparency = 1
+_TextLabel7.BorderSizePixel = 0
+_TextLabel7.Position = UDim2.new(0.0951031446, 0, 0.236987382, 0)
+_TextLabel7.Size = UDim2.new(0, 64, 0, 20)
+_TextLabel7.Font = Enum.Font.Gotham
+_TextLabel7.Text = 'Enable Smoothness'
+_TextLabel7.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel7.TextSize = 14
+_TextLabel7.TextXAlignment = Enum.TextXAlignment.Left
+_Frame10.Name = 'Circle3'
+_Frame10.Parent = _TextLabel7
+_Frame10.BackgroundColor3 = Color3.fromRGB(63, 63, 63)
+_Frame10.BorderSizePixel = 0
+_Frame10.Position = UDim2.new(-0.75, 0, 0, 0)
+_Frame10.Size = UDim2.new(0, 40, 0, 20)
+_UICorner8.CornerRadius = UDim.new(0, 100)
+_UICorner8.Parent = _Frame10
+_TextButton5.Name = 'Toggle3'
+_TextButton5.Parent = _Frame10
+_TextButton5.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton5.BorderSizePixel = 0
+_TextButton5.Size = UDim2.new(0, 20, 0, 20)
+_TextButton5.Font = Enum.Font.SourceSans
+_TextButton5.Text = ''
+_TextButton5.TextColor3 = Color3.fromRGB(0, 0, 0)
+_TextButton5.TextSize = 14
+_UICorner9.CornerRadius = UDim.new(0, 100)
+_UICorner9.Parent = _TextButton5
+_TextLabel8.Name = 'Text6'
+_TextLabel8.Parent = _Frame3
+_TextLabel8.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel8.BackgroundTransparency = 1
+_TextLabel8.BorderSizePixel = 0
+_TextLabel8.Position = UDim2.new(0.0951031446, 0, 0.288677245, 0)
+_TextLabel8.Size = UDim2.new(0, 64, 0, 20)
+_TextLabel8.Font = Enum.Font.Gotham
+_TextLabel8.Text = 'Enable Teamcheck'
+_TextLabel8.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel8.TextSize = 14
+_TextLabel8.TextXAlignment = Enum.TextXAlignment.Left
+_Frame11.Name = 'Circle4'
+_Frame11.Parent = _TextLabel8
+_Frame11.BackgroundColor3 = Color3.fromRGB(63, 63, 63)
+_Frame11.BorderSizePixel = 0
+_Frame11.Position = UDim2.new(-0.75, 0, 0, 0)
+_Frame11.Size = UDim2.new(0, 40, 0, 20)
+_UICorner10.CornerRadius = UDim.new(0, 100)
+_UICorner10.Parent = _Frame11
+_TextButton6.Name = 'Toggle4'
+_TextButton6.Parent = _Frame11
+_TextButton6.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton6.BorderSizePixel = 0
+_TextButton6.Size = UDim2.new(0, 20, 0, 20)
+_TextButton6.Font = Enum.Font.SourceSans
+_TextButton6.Text = ''
+_TextButton6.TextColor3 = Color3.fromRGB(0, 0, 0)
+_TextButton6.TextSize = 14
+_UICorner11.CornerRadius = UDim.new(0, 100)
+_UICorner11.Parent = _TextButton6
+_TextLabel9.Name = 'Text7'
+_TextLabel9.Parent = _Frame3
+_TextLabel9.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel9.BackgroundTransparency = 1
+_TextLabel9.Position = UDim2.new(0.0931677818, 0, 0.34194836, 0)
+_TextLabel9.Size = UDim2.new(0, 64, 0, 20)
+_TextLabel9.Font = Enum.Font.Gotham
+_TextLabel9.Text = 'Aimbot Keybind'
+_TextLabel9.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel9.TextSize = 14
+_TextLabel9.TextStrokeTransparency = 0
+_TextLabel9.TextXAlignment = Enum.TextXAlignment.Left
+_TextBox.Name = 'KeybindBox'
+_TextBox.Parent = _TextLabel9
+_TextBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextBox.BackgroundTransparency = 1
+_TextBox.Position = UDim2.new(-0.72437501, 0, -0.00999984704, 0)
+_TextBox.Size = UDim2.new(0, 38, 0, 20)
+_TextBox.Font = Enum.Font.Gotham
+_TextBox.PlaceholderText = '[NONE]'
+_TextBox.Text = ''
+_TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextBox.TextSize = 11
+_TextLabel10.Name = 'Text8'
+_TextLabel10.Parent = _Frame3
+_TextLabel10.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel10.BackgroundTransparency = 1
+_TextLabel10.Position = UDim2.new(-0.00414091302, 0, 0.387673944, 0)
+_TextLabel10.Size = UDim2.new(0, 55, 0, 20)
+_TextLabel10.ZIndex = 2
+_TextLabel10.Font = Enum.Font.Gotham
+_TextLabel10.Text = 'Aim At'
+_TextLabel10.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel10.TextSize = 14
+_TextLabel10.TextStrokeTransparency = 0
+_TextLabel10.TextXAlignment = Enum.TextXAlignment.Left
+_TextLabel11.Name = 'AimPartText'
+_TextLabel11.Parent = _TextLabel10
+_TextLabel11.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+_TextLabel11.BorderSizePixel = 0
+_TextLabel11.Position = UDim2.new(0.981819272, 0, 0, 0)
+_TextLabel11.Size = UDim2.new(0, 106, 0, 20)
+_TextLabel11.ZIndex = 2
+_TextLabel11.Font = Enum.Font.Gotham
+_TextLabel11.Text = 'Selection'
+_TextLabel11.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel11.TextSize = 10
+_TextLabel11.TextXAlignment = Enum.TextXAlignment.Left
+_ImageButton.Name = 'DropDownButton'
+_ImageButton.Parent = _TextLabel11
+_ImageButton.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+_ImageButton.BorderSizePixel = 0
+_ImageButton.LayoutOrder = 1
+_ImageButton.Position = UDim2.new(1.00943398, 0, 0, 0)
+_ImageButton.Size = UDim2.new(0, 20, 0, 20)
+_ImageButton.ZIndex = 2
+_ImageButton.Image = 'rbxassetid://6764432408'
+_ImageButton.ImageColor3 = Color3.fromRGB(75, 0, 115)
+_ImageButton.ImageRectOffset = Vector2.new(0, 450)
+_ImageButton.ImageRectSize = Vector2.new(50, 50)
+_Frame12.Name = 'AimpartFrame'
+_Frame12.Parent = _TextLabel11
+_Frame12.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+_Frame12.BorderSizePixel = 0
+_Frame12.ClipsDescendants = true
+_Frame12.Position = UDim2.new(0, 0, 1.10000002, 0)
+_Frame12.Size = UDim2.new(0, 106, 0, 0)
+_Frame12.ZIndex = 2
+_TextButton7.Name = 'HeadPart'
+_TextButton7.Parent = _Frame12
+_TextButton7.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton7.BackgroundTransparency = 1
+_TextButton7.Position = UDim2.new(0, 0, 0.0299996939, 0)
+_TextButton7.Size = UDim2.new(0, 106, 0, 18)
+_TextButton7.Font = Enum.Font.Gotham
+_TextButton7.Text = 'Head'
+_TextButton7.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton7.TextSize = 11
+_TextButton8.Name = 'UpperTorsoPart'
+_TextButton8.Parent = _Frame12
+_TextButton8.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton8.BackgroundTransparency = 1
+_TextButton8.Position = UDim2.new(0, 0, 0.218064576, 0)
+_TextButton8.Size = UDim2.new(0, 106, 0, 18)
+_TextButton8.Font = Enum.Font.Gotham
+_TextButton8.Text = 'UpperTorso'
+_TextButton8.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton8.TextSize = 11
+_TextButton9.Name = 'HumanoidRootPart'
+_TextButton9.Parent = _Frame12
+_TextButton9.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton9.BackgroundTransparency = 1
+_TextButton9.Position = UDim2.new(0, 0, 0.406129152, 0)
+_TextButton9.Size = UDim2.new(0, 106, 0, 18)
+_TextButton9.Font = Enum.Font.Gotham
+_TextButton9.Text = 'HumanoidRootPart'
+_TextButton9.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton9.TextSize = 11
+_TextButton10.Name = 'LowerTorsoPart'
+_TextButton10.Parent = _Frame12
+_TextButton10.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton10.BackgroundTransparency = 1
+_TextButton10.Position = UDim2.new(0, 0, 0.594193697, 0)
+_TextButton10.Size = UDim2.new(0, 106, 0, 18)
+_TextButton10.Font = Enum.Font.Gotham
+_TextButton10.Text = 'LowerTorso'
+_TextButton10.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton10.TextSize = 11
+_TextButton11.Name = 'FeetPart'
+_TextButton11.Parent = _Frame12
+_TextButton11.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton11.BackgroundTransparency = 1
+_TextButton11.Position = UDim2.new(0, 0, 0.782258272, 0)
+_TextButton11.Size = UDim2.new(0, 106, 0, 18)
+_TextButton11.Font = Enum.Font.Gotham
+_TextButton11.Text = 'RightFoot'
+_TextButton11.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton11.TextSize = 11
+_TextLabel12.Name = 'Text9'
+_TextLabel12.Parent = _Frame3
+_TextLabel12.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel12.BackgroundTransparency = 1
+_TextLabel12.Position = UDim2.new(-0.00414091302, 0, 0.443339974, 0)
+_TextLabel12.Size = UDim2.new(0, 98, 0, 20)
+_TextLabel12.Font = Enum.Font.Gotham
+_TextLabel12.Text = 'Resolver Type'
+_TextLabel12.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel12.TextSize = 14
+_TextLabel12.TextStrokeTransparency = 0
+_TextLabel12.TextXAlignment = Enum.TextXAlignment.Left
+_TextLabel13.Name = 'ResolverTypeText'
+_TextLabel13.Parent = _TextLabel12
+_TextLabel13.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+_TextLabel13.BorderSizePixel = 0
+_TextLabel13.Position = UDim2.new(0.995548248, 0, 0, 0)
+_TextLabel13.Size = UDim2.new(0, 106, 0, 20)
+_TextLabel13.Font = Enum.Font.Gotham
+_TextLabel13.Text = 'Selection'
+_TextLabel13.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel13.TextSize = 10
+_TextLabel13.TextXAlignment = Enum.TextXAlignment.Left
+_ImageButton2.Name = 'DropDownButton1'
+_ImageButton2.Parent = _TextLabel13
+_ImageButton2.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+_ImageButton2.BorderSizePixel = 0
+_ImageButton2.LayoutOrder = 1
+_ImageButton2.Position = UDim2.new(1.00943398, 0, 0, 0)
+_ImageButton2.Size = UDim2.new(0, 20, 0, 20)
+_ImageButton2.Image = 'rbxassetid://6764432408'
+_ImageButton2.ImageColor3 = Color3.fromRGB(75, 0, 115)
+_ImageButton2.ImageRectOffset = Vector2.new(0, 450)
+_ImageButton2.ImageRectSize = Vector2.new(50, 50)
+_Frame13.Name = 'ResolverTypeFrame'
+_Frame13.Parent = _TextLabel13
+_Frame13.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+_Frame13.BorderSizePixel = 0
+_Frame13.ClipsDescendants = true
+_Frame13.Position = UDim2.new(0, 0, 1.10000002, 0)
+_Frame13.Size = UDim2.new(0, 106, 0, 0)
+_TextButton12.Name = 'NoPrediction'
+_TextButton12.Parent = _Frame13
+_TextButton12.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton12.BackgroundTransparency = 1
+_TextButton12.Position = UDim2.new(0, 0, 0.0799996927, 0)
+_TextButton12.Size = UDim2.new(0, 106, 0, 18)
+_TextButton12.Font = Enum.Font.Gotham
+_TextButton12.Text = 'No Prediction'
+_TextButton12.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton12.TextSize = 11
+_TextButton13.Name = 'MoveDirection'
+_TextButton13.Parent = _Frame13
+_TextButton13.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton13.BackgroundTransparency = 1
+_TextButton13.Position = UDim2.new(0, 0, 0.532258272, 0)
+_TextButton13.Size = UDim2.new(0, 106, 0, 18)
+_TextButton13.Font = Enum.Font.Gotham
+_TextButton13.Text = 'MoveDirection'
+_TextButton13.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton13.TextSize = 11
+_TextLabel14.Name = 'Text10'
+_TextLabel14.Parent = _Frame3
+_TextLabel14.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel14.BackgroundTransparency = 1
+_TextLabel14.BorderSizePixel = 0
+_TextLabel14.Position = UDim2.new(0.0951031446, 0, 0.499412835, 0)
+_TextLabel14.Size = UDim2.new(0, 64, 0, 20)
+_TextLabel14.ZIndex = 0
+_TextLabel14.Font = Enum.Font.Gotham
+_TextLabel14.Text = 'Enable Airshot'
+_TextLabel14.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel14.TextSize = 14
+_TextLabel14.TextXAlignment = Enum.TextXAlignment.Left
+_Frame14.Name = 'Circle5'
+_Frame14.Parent = _TextLabel14
+_Frame14.BackgroundColor3 = Color3.fromRGB(63, 63, 63)
+_Frame14.BorderSizePixel = 0
+_Frame14.Position = UDim2.new(-0.75, 0, 0, 0)
+_Frame14.Size = UDim2.new(0, 40, 0, 20)
+_UICorner12.CornerRadius = UDim.new(0, 100)
+_UICorner12.Parent = _Frame14
+_TextButton14.Name = 'Toggle5'
+_TextButton14.Parent = _Frame14
+_TextButton14.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton14.BorderSizePixel = 0
+_TextButton14.Size = UDim2.new(0, 20, 0, 20)
+_TextButton14.Font = Enum.Font.SourceSans
+_TextButton14.Text = ''
+_TextButton14.TextColor3 = Color3.fromRGB(0, 0, 0)
+_TextButton14.TextSize = 14
+_UICorner13.CornerRadius = UDim.new(0, 100)
+_UICorner13.Parent = _TextButton14
+_TextLabel15.Name = 'Text11'
+_TextLabel15.Parent = _Frame3
+_TextLabel15.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel15.BackgroundTransparency = 1
+_TextLabel15.BorderSizePixel = 0
+_TextLabel15.Position = UDim2.new(0.0930327475, 0, 0.551102698, 0)
+_TextLabel15.Size = UDim2.new(0, 64, 0, 20)
+_TextLabel15.Font = Enum.Font.Gotham
+_TextLabel15.Text = 'Enable Auto Prediction'
+_TextLabel15.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel15.TextSize = 14
+_TextLabel15.TextXAlignment = Enum.TextXAlignment.Left
+_Frame15.Name = 'Circle6'
+_Frame15.Parent = _TextLabel15
+_Frame15.BackgroundColor3 = Color3.fromRGB(63, 63, 63)
+_Frame15.BorderSizePixel = 0
+_Frame15.Position = UDim2.new(-0.75, 0, 0, 0)
+_Frame15.Size = UDim2.new(0, 40, 0, 20)
+_UICorner14.CornerRadius = UDim.new(0, 100)
+_UICorner14.Parent = _Frame15
+_TextButton15.Name = 'Toggle6'
+_TextButton15.Parent = _Frame15
+_TextButton15.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton15.BorderSizePixel = 0
+_TextButton15.Size = UDim2.new(0, 20, 0, 20)
+_TextButton15.Font = Enum.Font.SourceSans
+_TextButton15.Text = ''
+_TextButton15.TextColor3 = Color3.fromRGB(0, 0, 0)
+_TextButton15.TextSize = 14
+_UICorner15.CornerRadius = UDim.new(0, 100)
+_UICorner15.Parent = _TextButton15
+_Frame16.Name = 'TargetPage'
+_Frame16.Parent = _Frame
+_Frame16.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_Frame16.BackgroundTransparency = 1
+_Frame16.Position = UDim2.new(0.00999999978, 0, 0.158000007, 0)
+_Frame16.Size = UDim2.new(0, 483, 0, 503)
+_Frame16.Visible = false
+_ImageLabel2.Name = 'ProfileTarget'
+_ImageLabel2.Parent = _Frame16
+_ImageLabel2.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+_ImageLabel2.BorderSizePixel = 0
+_ImageLabel2.Position = UDim2.new(0.395445108, 0, 0.0139165148, 0)
+_ImageLabel2.Size = UDim2.new(0, 100, 0, 100)
+_ImageLabel2.Image = 'rbxasset://textures/ui/GuiImagePlaceholder.png'
+_UICorner16.CornerRadius = UDim.new(0, 100)
+_UICorner16.Parent = _ImageLabel2
+_UIStroke4.Parent = _ImageLabel2
+_UIStroke4.Color = Color3.fromRGB(75, 0, 115)
+_UIStroke4.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+_TextBox2.Name = 'TargetPlr'
+_TextBox2.Parent = _Frame16
+_TextBox2.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+_TextBox2.BorderSizePixel = 0
+_TextBox2.Position = UDim2.new(0.00207039341, 0, 0.228628218, 0)
+_TextBox2.Size = UDim2.new(0, 480, 0, 23)
+_TextBox2.Font = Enum.Font.Gotham
+_TextBox2.PlaceholderText = 'Target Must Be Username'
+_TextBox2.Text = ''
+_TextBox2.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextBox2.TextSize = 13
+_TextLabel16.Name = 'TargetCash'
+_TextLabel16.Parent = _Frame16
+_TextLabel16.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel16.BackgroundTransparency = 1
+_TextLabel16.BorderSizePixel = 0
+_TextLabel16.Position = UDim2.new(0.0144927539, 0, 0.286282301, 0)
+_TextLabel16.Size = UDim2.new(0, 200, 0, 19)
+_TextLabel16.Font = Enum.Font.Gotham
+_TextLabel16.Text = 'Wallet : ???'
+_TextLabel16.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel16.TextSize = 13
+_TextLabel16.TextXAlignment = Enum.TextXAlignment.Left
+_TextLabel17.Name = 'TargetBounty'
+_TextLabel17.Parent = _Frame16
+_TextLabel17.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel17.BackgroundTransparency = 1
+_TextLabel17.BorderSizePixel = 0
+_TextLabel17.Position = UDim2.new(0.0144927539, 0, 0.324055672, 0)
+_TextLabel17.Size = UDim2.new(0, 200, 0, 19)
+_TextLabel17.Font = Enum.Font.Gotham
+_TextLabel17.Text = 'Bounty : ???'
+_TextLabel17.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel17.TextSize = 13
+_TextLabel17.TextXAlignment = Enum.TextXAlignment.Left
+_TextLabel18.Name = 'TargetUsername'
+_TextLabel18.Parent = _Frame16
+_TextLabel18.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel18.BackgroundTransparency = 1
+_TextLabel18.BorderSizePixel = 0
+_TextLabel18.Position = UDim2.new(0.0144927539, 0, 0.361829042, 0)
+_TextLabel18.Size = UDim2.new(0, 200, 0, 19)
+_TextLabel18.Font = Enum.Font.Gotham
+_TextLabel18.Text = 'Username : ???'
+_TextLabel18.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel18.TextSize = 13
+_TextLabel18.TextXAlignment = Enum.TextXAlignment.Left
+_TextLabel19.Name = 'TargetDisplayName'
+_TextLabel19.Parent = _Frame16
+_TextLabel19.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel19.BackgroundTransparency = 1
+_TextLabel19.BorderSizePixel = 0
+_TextLabel19.Position = UDim2.new(0.0144927539, 0, 0.399602413, 0)
+_TextLabel19.Size = UDim2.new(0, 200, 0, 19)
+_TextLabel19.Font = Enum.Font.Gotham
+_TextLabel19.Text = 'DisplayName : ???'
+_TextLabel19.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel19.TextSize = 13
+_TextLabel19.TextXAlignment = Enum.TextXAlignment.Left
+_TextLabel20.Name = 'TargetUserId'
+_TextLabel20.Parent = _Frame16
+_TextLabel20.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel20.BackgroundTransparency = 1
+_TextLabel20.BorderSizePixel = 0
+_TextLabel20.Position = UDim2.new(0.0144927539, 0, 0.437375784, 0)
+_TextLabel20.Size = UDim2.new(0, 200, 0, 19)
+_TextLabel20.Font = Enum.Font.Gotham
+_TextLabel20.Text = 'UserId : ???'
+_TextLabel20.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel20.TextSize = 13
+_TextLabel20.TextXAlignment = Enum.TextXAlignment.Left
+_TextButton16.Name = 'TeleportButton'
+_TextButton16.Parent = _Frame16
+_TextButton16.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+_TextButton16.BorderSizePixel = 0
+_TextButton16.Position = UDim2.new(0.0186335407, 0, 0.481113315, 0)
+_TextButton16.Size = UDim2.new(0, 465, 0, 18)
+_TextButton16.Font = Enum.Font.Gotham
+_TextButton16.Text = 'Teleport'
+_TextButton16.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton16.TextSize = 12
+_TextButton17.Name = 'SpectateButton'
+_TextButton17.Parent = _Frame16
+_TextButton17.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+_TextButton17.BorderSizePixel = 0
+_TextButton17.Position = UDim2.new(0.0186335407, 0, 0.528827012, 0)
+_TextButton17.Size = UDim2.new(0, 465, 0, 18)
+_TextButton17.Font = Enum.Font.Gotham
+_TextButton17.Text = 'Not Spectating'
+_TextButton17.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton17.TextSize = 12
+_TextButton18.Name = 'FrameButton'
+_TextButton18.Parent = _Frame16
+_TextButton18.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+_TextButton18.BorderSizePixel = 0
+_TextButton18.Position = UDim2.new(0.0186335407, 0, 0.576540709, 0)
+_TextButton18.Size = UDim2.new(0, 465, 0, 18)
+_TextButton18.Font = Enum.Font.Gotham
+_TextButton18.Text = 'Not Framing'
+_TextButton18.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton18.TextSize = 12
+_TextButton19.Name = 'VisualButton'
+_TextButton19.Parent = _Frame
+_TextButton19.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton19.BackgroundTransparency = 1
+_TextButton19.Position = UDim2.new(0.251924276, 0, 0.12479198, 0)
+_TextButton19.Size = UDim2.new(0, 65, 0, 17)
+_TextButton19.Font = Enum.Font.Gotham
+_TextButton19.Text = 'Visualize'
+_TextButton19.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton19.TextSize = 16
+_Frame17.Name = 'VisualizePage'
+_Frame17.Parent = _Frame
+_Frame17.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_Frame17.BackgroundTransparency = 1
+_Frame17.BorderColor3 = Color3.fromRGB(27, 42, 53)
+_Frame17.Position = UDim2.new(0.00999999978, 0, 0.158000007, 0)
+_Frame17.Size = UDim2.new(0, 483, 0, 503)
+_Frame17.Visible = false
+_TextLabel21.Name = 'Text16'
+_TextLabel21.Parent = _Frame17
+_TextLabel21.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel21.BackgroundTransparency = 1
+_TextLabel21.BorderSizePixel = 0
+_TextLabel21.Position = UDim2.new(0.0949999988, 0, 0.00600000005, 0)
+_TextLabel21.Size = UDim2.new(0, 64, 0, 20)
+_TextLabel21.Font = Enum.Font.Gotham
+_TextLabel21.Text = 'Enable Self AimViewer'
+_TextLabel21.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel21.TextSize = 14
+_TextLabel21.TextXAlignment = Enum.TextXAlignment.Left
+_Frame18.Name = 'Circle12'
+_Frame18.Parent = _TextLabel21
+_Frame18.BackgroundColor3 = Color3.fromRGB(63, 63, 63)
+_Frame18.BorderSizePixel = 0
+_Frame18.Position = UDim2.new(-0.75, 0, 0, 0)
+_Frame18.Size = UDim2.new(0, 40, 0, 20)
+_UICorner17.CornerRadius = UDim.new(0, 100)
+_UICorner17.Parent = _Frame18
+_TextButton20.Name = 'Toggle12'
+_TextButton20.Parent = _Frame18
+_TextButton20.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton20.BorderSizePixel = 0
+_TextButton20.Size = UDim2.new(0, 20, 0, 20)
+_TextButton20.Font = Enum.Font.SourceSans
+_TextButton20.Text = ''
+_TextButton20.TextColor3 = Color3.fromRGB(0, 0, 0)
+_TextButton20.TextSize = 14
+_UICorner18.CornerRadius = UDim.new(0, 100)
+_UICorner18.Parent = _TextButton20
+_TextLabel22.Name = 'Text17'
+_TextLabel22.Parent = _Frame17
+_TextLabel22.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel22.BackgroundTransparency = 1
+_TextLabel22.BorderSizePixel = 0
+_TextLabel22.Position = UDim2.new(0.0949999988, 0, 0.0576898605, 0)
+_TextLabel22.Size = UDim2.new(0, 64, 0, 20)
+_TextLabel22.Font = Enum.Font.Gotham
+_TextLabel22.Text = 'Enable Self Chams'
+_TextLabel22.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel22.TextSize = 14
+_TextLabel22.TextXAlignment = Enum.TextXAlignment.Left
+_Frame19.Name = 'Circle13'
+_Frame19.Parent = _TextLabel22
+_Frame19.BackgroundColor3 = Color3.fromRGB(63, 63, 63)
+_Frame19.BorderSizePixel = 0
+_Frame19.Position = UDim2.new(-0.75, 0, 0, 0)
+_Frame19.Size = UDim2.new(0, 40, 0, 20)
+_UICorner19.CornerRadius = UDim.new(0, 100)
+_UICorner19.Parent = _Frame19
+_TextButton21.Name = 'Toggle13'
+_TextButton21.Parent = _Frame19
+_TextButton21.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton21.BorderSizePixel = 0
+_TextButton21.Size = UDim2.new(0, 20, 0, 20)
+_TextButton21.Font = Enum.Font.SourceSans
+_TextButton21.Text = ''
+_TextButton21.TextColor3 = Color3.fromRGB(0, 0, 0)
+_TextButton21.TextSize = 14
+_UICorner20.CornerRadius = UDim.new(0, 100)
+_UICorner20.Parent = _TextButton21
+_TextLabel23.Name = 'Text18'
+_TextLabel23.Parent = _Frame17
+_TextLabel23.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel23.BackgroundTransparency = 1
+_TextLabel23.BorderSizePixel = 0
+_TextLabel23.Position = UDim2.new(0.0949999988, 0, 0.109379724, 0)
+_TextLabel23.Size = UDim2.new(0, 64, 0, 20)
+_TextLabel23.Font = Enum.Font.Gotham
+_TextLabel23.Text = 'Enable Player Chams'
+_TextLabel23.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel23.TextSize = 14
+_TextLabel23.TextXAlignment = Enum.TextXAlignment.Left
+_Frame20.Name = 'Circle14'
+_Frame20.Parent = _TextLabel23
+_Frame20.BackgroundColor3 = Color3.fromRGB(63, 63, 63)
+_Frame20.BorderSizePixel = 0
+_Frame20.Position = UDim2.new(-0.75, 0, 0, 0)
+_Frame20.Size = UDim2.new(0, 40, 0, 20)
+_UICorner21.CornerRadius = UDim.new(0, 100)
+_UICorner21.Parent = _Frame20
+_TextButton22.Name = 'Toggle14'
+_TextButton22.Parent = _Frame20
+_TextButton22.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton22.BorderSizePixel = 0
+_TextButton22.Size = UDim2.new(0, 20, 0, 20)
+_TextButton22.Font = Enum.Font.SourceSans
+_TextButton22.Text = ''
+_TextButton22.TextColor3 = Color3.fromRGB(0, 0, 0)
+_TextButton22.TextSize = 14
+_UICorner22.CornerRadius = UDim.new(0, 100)
+_UICorner22.Parent = _TextButton22
+_TextLabel24.Name = 'Text19'
+_TextLabel24.Parent = _Frame17
+_TextLabel24.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel24.BackgroundTransparency = 1
+_TextLabel24.BorderSizePixel = 0
+_TextLabel24.Position = UDim2.new(0.0949999988, 0, 0.161069587, 0)
+_TextLabel24.Size = UDim2.new(0, 64, 0, 20)
+_TextLabel24.Font = Enum.Font.Gotham
+_TextLabel24.Text = 'Enable No Slowdown'
+_TextLabel24.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel24.TextSize = 14
+_TextLabel24.TextXAlignment = Enum.TextXAlignment.Left
+_Frame21.Name = 'Circle15'
+_Frame21.Parent = _TextLabel24
+_Frame21.BackgroundColor3 = Color3.fromRGB(63, 63, 63)
+_Frame21.BorderSizePixel = 0
+_Frame21.Position = UDim2.new(-0.75, 0, 0, 0)
+_Frame21.Size = UDim2.new(0, 40, 0, 20)
+_UICorner23.CornerRadius = UDim.new(0, 100)
+_UICorner23.Parent = _Frame21
+_TextButton23.Name = 'Toggle15'
+_TextButton23.Parent = _Frame21
+_TextButton23.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton23.BorderSizePixel = 0
+_TextButton23.Size = UDim2.new(0, 20, 0, 20)
+_TextButton23.Font = Enum.Font.SourceSans
+_TextButton23.Text = ''
+_TextButton23.TextColor3 = Color3.fromRGB(0, 0, 0)
+_TextButton23.TextSize = 14
+_UICorner24.CornerRadius = UDim.new(0, 100)
+_UICorner24.Parent = _TextButton23
+_TextLabel25.Name = 'Text20'
+_TextLabel25.Parent = _Frame17
+_TextLabel25.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel25.BackgroundTransparency = 1
+_TextLabel25.BorderSizePixel = 0
+_TextLabel25.Position = UDim2.new(0.0949999988, 0, 0.21275945, 0)
+_TextLabel25.Size = UDim2.new(0, 64, 0, 20)
+_TextLabel25.Font = Enum.Font.Gotham
+_TextLabel25.Text = 'Enable No Jump Cooldown'
+_TextLabel25.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel25.TextSize = 14
+_TextLabel25.TextXAlignment = Enum.TextXAlignment.Left
+_Frame22.Name = 'Circle16'
+_Frame22.Parent = _TextLabel25
+_Frame22.BackgroundColor3 = Color3.fromRGB(63, 63, 63)
+_Frame22.BorderSizePixel = 0
+_Frame22.Position = UDim2.new(-0.75, 0, 0, 0)
+_Frame22.Size = UDim2.new(0, 40, 0, 20)
+_UICorner25.CornerRadius = UDim.new(0, 100)
+_UICorner25.Parent = _Frame22
+_TextButton24.Name = 'Toggle16'
+_TextButton24.Parent = _Frame22
+_TextButton24.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton24.BorderSizePixel = 0
+_TextButton24.Size = UDim2.new(0, 20, 0, 20)
+_TextButton24.Font = Enum.Font.SourceSans
+_TextButton24.Text = ''
+_TextButton24.TextColor3 = Color3.fromRGB(0, 0, 0)
+_TextButton24.TextSize = 14
+_UICorner26.CornerRadius = UDim.new(0, 100)
+_UICorner26.Parent = _TextButton24
+_TextLabel26.Name = 'Text21'
+_TextLabel26.Parent = _Frame17
+_TextLabel26.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel26.BackgroundTransparency = 1
+_TextLabel26.BorderSizePixel = 0
+_TextLabel26.Position = UDim2.new(0.0949999988, 0, 0.264449298, 0)
+_TextLabel26.Size = UDim2.new(0, 64, 0, 20)
+_TextLabel26.Font = Enum.Font.Gotham
+_TextLabel26.Text = 'Enable Cash Aura'
+_TextLabel26.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel26.TextSize = 14
+_TextLabel26.TextXAlignment = Enum.TextXAlignment.Left
+_Frame23.Name = 'Circle17'
+_Frame23.Parent = _TextLabel26
+_Frame23.BackgroundColor3 = Color3.fromRGB(63, 63, 63)
+_Frame23.BorderSizePixel = 0
+_Frame23.Position = UDim2.new(-0.75, 0, 0, 0)
+_Frame23.Size = UDim2.new(0, 40, 0, 20)
+_UICorner27.CornerRadius = UDim.new(0, 100)
+_UICorner27.Parent = _Frame23
+_TextButton25.Name = 'Toggle17'
+_TextButton25.Parent = _Frame23
+_TextButton25.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton25.BorderSizePixel = 0
+_TextButton25.Size = UDim2.new(0, 20, 0, 20)
+_TextButton25.Font = Enum.Font.SourceSans
+_TextButton25.Text = ''
+_TextButton25.TextColor3 = Color3.fromRGB(0, 0, 0)
+_TextButton25.TextSize = 14
+_UICorner28.CornerRadius = UDim.new(0, 100)
+_UICorner28.Parent = _TextButton25
+_TextButton26.Name = 'SkyboxButton'
+_TextButton26.Parent = _Frame
+_TextButton26.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton26.BackgroundTransparency = 1
+_TextButton26.Position = UDim2.new(0.384307146, 0, 0.12479198, 0)
+_TextButton26.Size = UDim2.new(0, 65, 0, 17)
+_TextButton26.Font = Enum.Font.Gotham
+_TextButton26.Text = 'Skybox'
+_TextButton26.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton26.TextSize = 16
+_Frame24.Name = 'SkyboxPage'
+_Frame24.Parent = _Frame
+_Frame24.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_Frame24.BackgroundTransparency = 1
+_Frame24.BorderColor3 = Color3.fromRGB(27, 42, 53)
+_Frame24.Position = UDim2.new(0.00999999978, 0, 0.158000007, 0)
+_Frame24.Size = UDim2.new(0, 483, 0, 503)
+_Frame24.Visible = false
+_TextLabel27.Name = 'SkyBoxText1'
+_TextLabel27.Parent = _Frame24
+_TextLabel27.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel27.BackgroundTransparency = 1
+_TextLabel27.BorderSizePixel = 0
+_TextLabel27.Position = UDim2.new(0.0949999988, 0, 0.00600000005, 0)
+_TextLabel27.Size = UDim2.new(0, 64, 0, 20)
+_TextLabel27.Font = Enum.Font.Gotham
+_TextLabel27.Text = 'Galaxy'
+_TextLabel27.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel27.TextSize = 14
+_TextLabel27.TextXAlignment = Enum.TextXAlignment.Left
+_Frame25.Name = 'F1'
+_Frame25.Parent = _TextLabel27
+_Frame25.BackgroundColor3 = Color3.fromRGB(63, 63, 63)
+_Frame25.BorderSizePixel = 0
+_Frame25.Position = UDim2.new(-0.75, 0, 0, 0)
+_Frame25.Size = UDim2.new(0, 40, 0, 20)
+_UICorner29.CornerRadius = UDim.new(0, 100)
+_UICorner29.Parent = _Frame25
+_TextButton27.Name = 'SkyBoxToggle1'
+_TextButton27.Parent = _Frame25
+_TextButton27.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton27.BorderSizePixel = 0
+_TextButton27.Size = UDim2.new(0, 20, 0, 20)
+_TextButton27.Font = Enum.Font.SourceSans
+_TextButton27.Text = ''
+_TextButton27.TextColor3 = Color3.fromRGB(0, 0, 0)
+_TextButton27.TextSize = 14
+_UICorner30.CornerRadius = UDim.new(0, 100)
+_UICorner30.Parent = _TextButton27
+_TextLabel28.Name = 'SkyBoxText2'
+_TextLabel28.Parent = _Frame24
+_TextLabel28.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel28.BackgroundTransparency = 1
+_TextLabel28.BorderSizePixel = 0
+_TextLabel28.Position = UDim2.new(0.0949999988, 0, 0.0576898605, 0)
+_TextLabel28.Size = UDim2.new(0, 64, 0, 20)
+_TextLabel28.Font = Enum.Font.Gotham
+_TextLabel28.Text = 'Aesthetic Night'
+_TextLabel28.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel28.TextSize = 14
+_TextLabel28.TextXAlignment = Enum.TextXAlignment.Left
+_Frame26.Name = 'F2'
+_Frame26.Parent = _TextLabel28
+_Frame26.BackgroundColor3 = Color3.fromRGB(63, 63, 63)
+_Frame26.BorderSizePixel = 0
+_Frame26.Position = UDim2.new(-0.75, 0, 0, 0)
+_Frame26.Size = UDim2.new(0, 40, 0, 20)
+_UICorner31.CornerRadius = UDim.new(0, 100)
+_UICorner31.Parent = _Frame26
+_TextButton28.Name = 'SkyBoxToggle2'
+_TextButton28.Parent = _Frame26
+_TextButton28.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton28.BorderSizePixel = 0
+_TextButton28.Size = UDim2.new(0, 20, 0, 20)
+_TextButton28.Font = Enum.Font.SourceSans
+_TextButton28.Text = ''
+_TextButton28.TextColor3 = Color3.fromRGB(0, 0, 0)
+_TextButton28.TextSize = 14
+_UICorner32.CornerRadius = UDim.new(0, 100)
+_UICorner32.Parent = _TextButton28
+_TextLabel29.Name = 'SkyBoxText3'
+_TextLabel29.Parent = _Frame24
+_TextLabel29.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel29.BackgroundTransparency = 1
+_TextLabel29.BorderSizePixel = 0
+_TextLabel29.Position = UDim2.new(0.0949999988, 0, 0.109379724, 0)
+_TextLabel29.Size = UDim2.new(0, 64, 0, 20)
+_TextLabel29.Font = Enum.Font.Gotham
+_TextLabel29.Text = 'Purple Nebula'
+_TextLabel29.TextColor3 = Color3.fromRGB(255, 255, 255)
+_TextLabel29.TextSize = 14
+_TextLabel29.TextXAlignment = Enum.TextXAlignment.Left
+_Frame27.Name = 'F3'
+_Frame27.Parent = _TextLabel29
+_Frame27.BackgroundColor3 = Color3.fromRGB(63, 63, 63)
+_Frame27.BorderSizePixel = 0
+_Frame27.Position = UDim2.new(-0.75, 0, 0, 0)
+_Frame27.Size = UDim2.new(0, 40, 0, 20)
+_UICorner33.CornerRadius = UDim.new(0, 100)
+_UICorner33.Parent = _Frame27
+_TextButton29.Name = 'SkyBoxToggle3'
+_TextButton29.Parent = _Frame27
+_TextButton29.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_TextButton29.BorderSizePixel = 0
+_TextButton29.Size = UDim2.new(0, 20, 0, 20)
+_TextButton29.Font = Enum.Font.SourceSans
+_TextButton29.Text = ''
+_TextButton29.TextColor3 = Color3.fromRGB(0, 0, 0)
+_TextButton29.TextSize = 14
+_UICorner34.CornerRadius = UDim.new(0, 100)
+_UICorner34.Parent = _TextButton29
+
+local function v186()
+    local _LocalScript = Instance.new('LocalScript', _TextButton)
+
+    _LocalScript.Parent.MouseButton1Down:Connect(function()
+        _LocalScript.Parent.Parent.AimbotPage.Visible = true
+        _LocalScript.Parent.Parent.TargetPage.Visible = false
+        _LocalScript.Parent.Parent.VisualizePage.Visible = false
+        _LocalScript.Parent.Parent.SkyboxPage.Visible = false
+    end)
+end
+
+coroutine.wrap(v186)()
+
+local function v188()
+    local _LocalScript2 = Instance.new('LocalScript', _TextButton2)
+
+    _LocalScript2.Parent.MouseButton1Down:Connect(function()
+        _LocalScript2.Parent.Parent.AimbotPage.Visible = false
+        _LocalScript2.Parent.Parent.TargetPage.Visible = true
+        _LocalScript2.Parent.Parent.VisualizePage.Visible = false
+        _LocalScript2.Parent.Parent.SkyboxPage.Visible = false
+    end)
+end
+
+coroutine.wrap(v188)()
+
+local function v191()
+    local _LocalScript3 = Instance.new('LocalScript', _TextButton3)
+    local u190 = false
+
+    _LocalScript3.Parent.MouseButton1Down:Connect(function()
+        if u190 ~= false then
+            u190 = false
+        else
+            u190 = true
+        end
+        if u190 == true then
+            u20 = true
+            _LocalScript3.Parent.Parent.Toggle1.Position = UDim2.new(0.5, 0, 0, 0)
+            _LocalScript3.Parent.Parent.Toggle1.BackgroundColor3 = Color3.fromRGB(75, 0, 255)
+        end
+        if u190 == false then
+            u20 = false
+            _LocalScript3.Parent.Parent.Toggle1.Position = UDim2.new(0, 0, 0, 0)
+            _LocalScript3.Parent.Parent.Toggle1.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        end
+    end)
+end
+
+coroutine.wrap(v191)()
+
+local function v203()
+    local _LocalScript4 = Instance.new('LocalScript', _Frame6)
+    local _Parent = _LocalScript4.Parent
+    local _Parent2 = _Parent.Parent
+    local u195 = game.Players.LocalPlayer:GetMouse()
+    local u196 = false
+
+    _Parent.InputBegan:Connect(function(p197)
+        if p197.UserInputType == Enum.UserInputType.MouseButton1 then
+            u196 = true
+
+            while u196 do
+                local v198 = math.round(Snap(math.clamp((u195.X - _Parent2.AbsolutePosition.X) / _Parent2.AbsoluteSize.X, 0, 1), 0.01) * 100) / 100
+
+                _Parent.Position = UDim2.new(v198, 0, _Parent.Position.Y.Scale, 0)
+
+                task.wait()
+
+                local v199 = 0 * (0 - v198) + 1 * v198
+
+                _LocalScript4.Parent.Parent.PredictionValue.Text = v199
+                u9 = v199
+            end
+        end
+    end)
+    _Parent.InputEnded:Connect(function(p200)
+        if p200.UserInputType == Enum.UserInputType.MouseButton1 then
+            u196 = false
+        end
+    end)
+
+    function Snap(p201, p202)
+        return p201 - p201 % p202
+    end
+end
+
+coroutine.wrap(v203)()
+
+local function v215()
+    local _LocalScript5 = Instance.new('LocalScript', _Frame8)
+    local _Parent3 = _LocalScript5.Parent
+    local _Parent4 = _Parent3.Parent
+    local u207 = game.Players.LocalPlayer:GetMouse()
+    local u208 = false
+
+    _Parent3.InputBegan:Connect(function(p209)
+        if p209.UserInputType == Enum.UserInputType.MouseButton1 then
+            u208 = true
+
+            while u208 do
+                local v210 = math.round(Snap(math.clamp((u207.X - _Parent4.AbsolutePosition.X) / _Parent4.AbsoluteSize.X, 0, 1), 0.1) * 100) / 100
+
+                _Parent3.Position = UDim2.new(v210, 0, _Parent3.Position.Y.Scale, 0)
+
+                task.wait(0.01)
+
+                local v211 = 0 * (0 - v210) + 1 * v210
+
+                _LocalScript5.Parent.Parent.SmoothnessValue.Text = v211
+                u12 = v211
+            end
+        end
+    end)
+    _Parent3.InputEnded:Connect(function(p212)
+        if p212.UserInputType == Enum.UserInputType.MouseButton1 then
+            u208 = false
+        end
+    end)
+
+    function Snap(p213, p214)
+        return p213 - p213 % p214
+    end
+end
+
+coroutine.wrap(v215)()
+
+local function v218()
+    local _LocalScript6 = Instance.new('LocalScript', _TextButton4)
+    local u217 = false
+
+    _LocalScript6.Parent.MouseButton1Down:Connect(function()
+        if u217 ~= false then
+            u217 = false
+        else
+            u217 = true
+        end
+        if u217 == true then
+            u8 = true
+            _LocalScript6.Parent.Parent.Toggle2.Position = UDim2.new(0.5, 0, 0, 0)
+            _LocalScript6.Parent.Parent.Toggle2.BackgroundColor3 = Color3.fromRGB(75, 0, 255)
+        end
+        if u217 == false then
+            u8 = false
+            _LocalScript6.Parent.Parent.Toggle2.Position = UDim2.new(0, 0, 0, 0)
+            _LocalScript6.Parent.Parent.Toggle2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        end
+    end)
+end
+
+coroutine.wrap(v218)()
+
+local function v221()
+    local _LocalScript7 = Instance.new('LocalScript', _TextButton5)
+    local u220 = false
+
+    _LocalScript7.Parent.MouseButton1Down:Connect(function()
+        if u220 ~= false then
+            u220 = false
+        else
+            u220 = true
+        end
+        if u220 == true then
+            u11 = true
+            _LocalScript7.Parent.Parent.Toggle3.Position = UDim2.new(0.5, 0, 0, 0)
+            _LocalScript7.Parent.Parent.Toggle3.BackgroundColor3 = Color3.fromRGB(75, 0, 255)
+        end
+        if u220 == false then
+            u11 = false
+            _LocalScript7.Parent.Parent.Toggle3.Position = UDim2.new(0, 0, 0, 0)
+            _LocalScript7.Parent.Parent.Toggle3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        end
+    end)
+end
+
+coroutine.wrap(v221)()
+
+local function v224()
+    local _LocalScript8 = Instance.new('LocalScript', _TextButton6)
+    local u223 = false
+
+    _LocalScript8.Parent.MouseButton1Down:Connect(function()
+        if u223 ~= false then
+            u223 = false
+        else
+            u223 = true
+        end
+        if u223 == true then
+            u7 = true
+            _LocalScript8.Parent.Parent.Toggle4.Position = UDim2.new(0.5, 0, 0, 0)
+            _LocalScript8.Parent.Parent.Toggle4.BackgroundColor3 = Color3.fromRGB(75, 0, 255)
+        end
+        if u223 == false then
+            u7 = false
+            _LocalScript8.Parent.Parent.Toggle4.Position = UDim2.new(0, 0, 0, 0)
+            _LocalScript8.Parent.Parent.Toggle4.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        end
+    end)
+end
+
+coroutine.wrap(v224)()
+
+local function v227()
+    local _LocalScript9 = Instance.new('LocalScript', _TextBox)
+
+    _LocalScript9.Parent.FocusLost:Connect(function(p226)
+        if p226 then
+            u3 = _LocalScript9.Parent.Parent.KeybindBox.Text
+        end
+    end)
+end
+
+coroutine.wrap(v227)()
+
+local function v230()
+    local _LocalScript10 = Instance.new('LocalScript', _ImageButton)
+    local u229 = false
+
+    _LocalScript10.Parent.MouseButton1Down:Connect(function()
+        if u229 ~= false then
+            u229 = false
+        else
+            u229 = true
+        end
+        if u229 == true then
+            _LocalScript10.Parent.Parent.AimpartFrame.Size = UDim2.new(0, 106, 0, 100)
+            _LocalScript10.Parent.Parent.DropDownButton.Rotation = 180
+        end
+        if u229 == false then
+            _LocalScript10.Parent.Parent.AimpartFrame.Size = UDim2.new(0, 106, 0, 0)
+            _LocalScript10.Parent.Parent.DropDownButton.Rotation = 0
+        end
+    end)
+end
+
+coroutine.wrap(v230)()
+
+local function v231()
+    Instance.new('LocalScript', _TextButton7).Parent.MouseButton1Down:Connect(function()
+        u2 = 'Head'
+    end)
+end
+
+coroutine.wrap(v231)()
+
+local function v232()
+    Instance.new('LocalScript', _TextButton8).Parent.MouseButton1Down:Connect(function()
+        u2 = 'UpperTorso'
+    end)
+end
+
+coroutine.wrap(v232)()
+
+local function v233()
+    Instance.new('LocalScript', _TextButton9).Parent.MouseButton1Down:Connect(function()
+        u2 = 'HumanoidRootPart'
+    end)
+end
+
+coroutine.wrap(v233)()
+
+local function v234()
+    Instance.new('LocalScript', _TextButton10).Parent.MouseButton1Down:Connect(function()
+        u2 = 'LowerTorso'
+    end)
+end
+
+coroutine.wrap(v234)()
+
+local function v235()
+    Instance.new('LocalScript', _TextButton11).Parent.MouseButton1Down:Connect(function()
+        u2 = 'RightFoot'
+    end)
+end
+
+coroutine.wrap(v235)()
+
+local function v238()
+    local _LocalScript11 = Instance.new('LocalScript', _ImageButton2)
+    local u237 = false
+
+    _LocalScript11.Parent.MouseButton1Down:Connect(function()
+        if u237 ~= false then
+            u237 = false
+        else
+            u237 = true
+        end
+        if u237 == true then
+            _LocalScript11.Parent.Parent.ResolverTypeFrame.Size = UDim2.new(0, 106, 0, 40)
+            _LocalScript11.Parent.Parent.DropDownButton1.Rotation = 180
+        end
+        if u237 == false then
+            _LocalScript11.Parent.Parent.ResolverTypeFrame.Size = UDim2.new(0, 106, 0, 0)
+            _LocalScript11.Parent.Parent.DropDownButton1.Rotation = 0
+        end
+    end)
+end
+
+coroutine.wrap(v238)()
+
+local function v246()
+    local _LocalScript12 = Instance.new('LocalScript', _TextButton12)
+    local u240 = false
+
+    _LocalScript12.Parent.MouseButton1Down:Connect(function()
+        if u240 ~= false then
+            u240 = false
+        else
+            u240 = true
+        end
+        if u240 == true then
+            _LocalScript12.Parent.Parent.NoPrediction.TextColor3 = Color3.new(75, 0, 255)
+
+            game:GetService('RunService'):BindToRenderStep('NoPredictionResolver', 0, function()
+                pcall(function()
+                    local v241, v242, v243 = pairs(game.Players:GetChildren())
+
+                    while true do
+                        local v244
+
+                        v243, v244 = v241(v242, v243)
+
+                        if v243 == nil then
+                            break
+                        end
+                        if v244.Name ~= game.Players.LocalPlayer.Name then
+                            local _HumanoidRootPart = v244.Character.HumanoidRootPart
+
+                            _HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
+                            _HumanoidRootPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+                        end
+                    end
+                end)
+            end)
+        end
+        if u240 == false then
+            _LocalScript12.Parent.Parent.NoPrediction.TextColor3 = Color3.new(255, 255, 255)
+
+            game:GetService('RunService'):UnbindFromRenderStep('NoPredictionResolver')
+        end
+    end)
+end
+
+coroutine.wrap(v246)()
+
+local function v254()
+    local _LocalScript13 = Instance.new('LocalScript', _TextButton13)
+    local u248 = false
+
+    _LocalScript13.Parent.MouseButton1Down:Connect(function()
+        if u248 ~= false then
+            u248 = false
+        else
+            u248 = true
+        end
+        if u248 == true then
+            _LocalScript13.Parent.Parent.MoveDirection.TextColor3 = Color3.new(75, 0, 255)
+
+            game:GetService('RunService'):BindToRenderStep('MoveDirectionResolver', 0, function()
+                pcall(function()
+                    local v249, v250, v251 = pairs(game.Players:GetChildren())
+
+                    while true do
+                        local v252
+
+                        v251, v252 = v249(v250, v251)
+
+                        if v251 == nil then
+                            break
+                        end
+                        if v252.Name ~= game.Players.LocalPlayer.Name then
+                            local _HumanoidRootPart2 = v252.Character.HumanoidRootPart
+
+                            _HumanoidRootPart2.Velocity = v252.Character.Humanoid.MoveDirection * 16
+                            _HumanoidRootPart2.AssemblyLinearVelocity = v252.Character.Humanoid.MoveDirection * 16
+                        end
+                    end
+                end)
+            end)
+        end
+        if u248 == false then
+            _LocalScript13.Parent.Parent.MoveDirection.TextColor3 = Color3.new(255, 255, 255)
+
+            game:GetService('RunService'):UnbindFromRenderStep('MoveDirectionResolver')
+        end
+    end)
+end
+
+coroutine.wrap(v254)()
+
+local function v257()
+    local _LocalScript14 = Instance.new('LocalScript', _TextButton14)
+    local u256 = false
+
+    _LocalScript14.Parent.MouseButton1Down:Connect(function()
+        if u256 ~= false then
+            u256 = false
+        else
+            u256 = true
+        end
+        if u256 == true then
+            u10 = true
+            _LocalScript14.Parent.Parent.Toggle5.Position = UDim2.new(0.5, 0, 0, 0)
+            _LocalScript14.Parent.Parent.Toggle5.BackgroundColor3 = Color3.fromRGB(75, 0, 255)
+        end
+        if u256 == false then
+            u10 = false
+            _LocalScript14.Parent.Parent.Toggle5.Position = UDim2.new(0, 0, 0, 0)
+            _LocalScript14.Parent.Parent.Toggle5.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        end
+    end)
+end
+
+coroutine.wrap(v257)()
+
+local function v262()
+    local _LocalScript15 = Instance.new('LocalScript', _TextButton15)
+    local u259 = false
+
+    _LocalScript15.Parent.MouseButton1Down:Connect(function()
+        if u259 ~= false then
+            u259 = false
+        else
+            u259 = true
+        end
+        if u259 == true then
+            game:GetService('RunService'):BindToRenderStep('AutoPrediction', 0, function()
+                local v260 = game:GetService('Stats').Network.ServerStatsItem['Data Ping']:GetValueString()
+                local v261 = string.split(v260, ' ')[1]
+
+                if tonumber(v261) >= 40 then
+                    if tonumber(v261) > 50 then
+                        if tonumber(v261) > 60 then
+                            if tonumber(v261) > 70 then
+                                if tonumber(v261) > 80 then
+                                    if tonumber(v261) > 90 then
+                                        if tonumber(v261) > 100 then
+                                            if tonumber(v261) <= 110 then
+                                                u9 = 0.177
+                                            end
+                                        else
+                                            u9 = 0.141
+                                        end
+                                    else
+                                        u9 = 0.1332241241231
+                                    end
+                                else
+                                    u9 = 0.141
+                                end
+                            else
+                                u9 = 0.14
+                            end
+                        else
+                            u9 = 0.13
+                        end
+                    else
+                        u9 = 0.125991
+                    end
+                else
+                    u9 = 0.108
+                end
+            end)
+
+            _LocalScript15.Parent.Parent.Toggle6.Position = UDim2.new(0.5, 0, 0, 0)
+            _LocalScript15.Parent.Parent.Toggle6.BackgroundColor3 = Color3.fromRGB(75, 0, 255)
+        end
+        if u259 == false then
+            u9 = 0
+
+            game:GetService('RunService'):UnbindFromRenderStep('AutoPrediction')
+
+            _LocalScript15.Parent.Parent.Toggle6.Position = UDim2.new(0, 0, 0, 0)
+            _LocalScript15.Parent.Parent.Toggle6.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        end
+    end)
+end
+
+coroutine.wrap(v262)()
+
+local function v265()
+    local _LocalScript16 = Instance.new('LocalScript', _Frame)
+
+    game:GetService('UserInputService').InputBegan:Connect(function(p264)
+        if p264.KeyCode == Enum.KeyCode.V then
+            if _LocalScript16.Parent.Parent.DX9WARE_Frame.Visible ~= true then
+                _LocalScript16.Parent.Parent.DX9WARE_Frame.Visible = true
+            else
+                _LocalScript16.Parent.Parent.DX9WARE_Frame.Visible = false
+            end
+        end
+    end)
+end
+
+coroutine.wrap(v265)()
+
+local function v278()
+    local _LocalScript17 = Instance.new('LocalScript', _TextBox2)
+
+    local function u268(p267)
+        return tostring(p267):reverse():gsub('%d%d%d', '%1,'):reverse():gsub('^,', '')
+    end
+
+    _LocalScript17.Parent.FocusLost:connect(function()
+        local v269, v270, v271 = pairs(game.Players:GetChildren())
+
+        while true do
+            local v272
+
+            v271, v272 = v269(v270, v271)
+
+            if v271 == nil then
+                break
+            end
+            if string.sub(string.lower(v272.Name), 1, string.len(_LocalScript17.Parent.Parent.TargetPlr.Text)) == string.lower(_LocalScript17.Parent.Parent.TargetPlr.Text) then
+                _LocalScript17.Parent.Parent.TargetPlr.Text = v272.Name
+
+                local v273 = game:GetService('Players'):FindFirstChild(_LocalScript17.Parent.Parent.TargetPlr.Text)
+
+                if v273 then
+                    local _UserId = v273.UserId
+                    local _HeadShot = Enum.ThumbnailType.HeadShot
+                    local _Size420x420 = Enum.ThumbnailSize.Size420x420
+                    local v277, _ = game:GetService('Players'):GetUserThumbnailAsync(_UserId, _HeadShot, _Size420x420)
+
+                    _LocalScript17.Parent.Parent.ProfileTarget.Image = v277
+                end
+
+                _LocalScript17.Parent.Parent.TargetUsername.Text = 'Username : ' .. v272.Name
+                _LocalScript17.Parent.Parent.TargetDisplayName.Text = 'DisplayName : ' .. v272.DisplayName
+                _LocalScript17.Parent.Parent.TargetUserId.Text = 'UserId : ' .. v272.UserId
+                _LocalScript17.Parent.Parent.TargetCash.Text = 'Wallet : ' .. u268(v273.DataFolder.Currency.Value)
+                _LocalScript17.Parent.Parent.TargetBounty.Text = 'Bounty : ' .. u268(v273.leaderstats.Wanted.Value)
+            end
+        end
+    end)
+end
+
+coroutine.wrap(v278)()
+
+local function v280()
+    local _LocalScript18 = Instance.new('LocalScript', _TextButton16)
+
+    _LocalScript18.Parent.MouseButton1Click:Connect(function()
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(game.Players[_LocalScript18.Parent.Parent.TargetPlr.Text].Character.UpperTorso.Position)
+    end)
+end
+
+coroutine.wrap(v280)()
+
+local function v284()
+    local _LocalScript19 = Instance.new('LocalScript', _TextButton17)
+
+    local function u283(p282)
+        wait()
+
+        if game.Players:FindFirstChild(p282) then
+            if game.Players[p282].Character then
+                game.Workspace:FindFirstChildWhichIsA('Camera').CameraSubject = game.Players:FindFirstChild(p282).Character.HumanoidRootPart
+            else
+                _LocalScript19.Parent.Parent.SpectateButton.Text = 'Not Spectating'
+            end
+        else
+            _LocalScript19.Parent.Parent.SpectateButton.Text = 'Spectating'
+        end
+    end
+
+    _LocalScript19.Parent.MouseButton1Click:Connect(function()
+        if _LocalScript19.Parent.Parent.SpectateButton.Text ~= 'Not Spectating' then
+            _LocalScript19.Parent.Parent.SpectateButton.Text = 'Not Spectating'
+        else
+            _LocalScript19.Parent.Parent.SpectateButton.Text = 'Spectating'
+
+            repeat
+                u283(_LocalScript19.Parent.Parent.TargetPlr.Text)
+            until _LocalScript19.Parent.Parent.SpectateButton.Text == 'Not Spectating'
+
+            game.Workspace:FindFirstChildWhichIsA('Camera').CameraSubject = game.Players.LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid')
+        end
+    end)
+end
+
+coroutine.wrap(v284)()
+
+local function v287()
+    local _LocalScript20 = Instance.new('LocalScript', _TextButton18)
+    local u286 = false
+
+    _LocalScript20.Parent.MouseButton1Click:Connect(function()
+        if u286 ~= false then
+            u286 = false
+        else
+            u286 = true
+        end
+        if u286 == true then
+            _LocalScript20.Parent.Parent.FrameButton.Text = 'Framing'
+
+            game:GetService('RunService'):BindToRenderStep('Frames', 0, function()
+                game.Players[_LocalScript20.Parent.Parent.TargetPlr.Text].Character.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 6, 0)
+            end)
+        end
+        if u286 == false then
+            game:GetService('RunService'):UnbindFromRenderStep('Frames')
+
+            _LocalScript20.Parent.Parent.FrameButton.Text = 'Not Framing'
+        end
+    end)
+end
+
+coroutine.wrap(v287)()
+
+local function v289()
+    local _LocalScript21 = Instance.new('LocalScript', _TextButton19)
+
+    _LocalScript21.Parent.MouseButton1Down:Connect(function()
+        _LocalScript21.Parent.Parent.AimbotPage.Visible = false
+        _LocalScript21.Parent.Parent.TargetPage.Visible = false
+        _LocalScript21.Parent.Parent.VisualizePage.Visible = true
+        _LocalScript21.Parent.Parent.SkyboxPage.Visible = false
+    end)
+end
+
+coroutine.wrap(v289)()
+
+local function v304()
+    local _LocalScript22 = Instance.new('LocalScript', _TextButton20)
+    local u291 = false
+    local _Players2 = game:GetService('Players')
+    local _RunService2 = game:GetService('RunService')
+    local _LocalPlayer2 = _Players2.LocalPlayer
+    local _Beam = Instance.new('Beam')
+
+    _Beam.Segments = 1
+    _Beam.Width0 = 0.2
+    _Beam.Width1 = 0.2
+    _Beam.Color = ColorSequence.new(Color3.new(1, 0, 0))
+    _Beam.FaceCamera = true
+
+    local _Attachment = Instance.new('Attachment')
+    local _Attachment2 = Instance.new('Attachment')
+
+    _Beam.Attachment0 = _Attachment
+    _Beam.Attachment1 = _Attachment2
+    _Beam.Parent = workspace.Terrain
+    _Attachment.Parent = workspace.Terrain
+    _Attachment2.Parent = workspace.Terrain
+
+    local v298 = _LocalPlayer2
+    local u299 = _LocalPlayer2.GetMouse(v298)
+
+    _Beam.Enabled = false
+
+    _RunService2.RenderStepped:Connect(function()
+        local _Character = _LocalPlayer2.Character
+
+        if _Character then
+            local _Head2 = _Character:FindFirstChild('Head')
+
+            if _Head2 then
+                local _Position = _Head2.Position
+                local _p = u299.Hit.p
+
+                _Attachment.Position = _Position
+                _Attachment2.Position = _p
+            else
+                _Beam.Enabled = false
+            end
+        else
+            _Beam.Enabled = false
+
+            return
+        end
+    end)
+    _LocalScript22.Parent.MouseButton1Down:Connect(function()
+        if u291 ~= false then
+            u291 = false
+        else
+            u291 = true
+        end
+        if u291 == true then
+            _Beam.Enabled = true
+            _LocalScript22.Parent.Parent.Toggle12.Position = UDim2.new(0.5, 0, 0, 0)
+            _LocalScript22.Parent.Parent.Toggle12.BackgroundColor3 = Color3.fromRGB(75, 0, 255)
+        end
+        if u291 == false then
+            _Beam.Enabled = false
+            _LocalScript22.Parent.Parent.Toggle12.Position = UDim2.new(0, 0, 0, 0)
+            _LocalScript22.Parent.Parent.Toggle12.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        end
+    end)
+end
+
+coroutine.wrap(v304)()
+
+local function v315()
+    local _LocalScript23 = Instance.new('LocalScript', _TextButton21)
+    local u306 = false
+
+    _LocalScript23.Parent.MouseButton1Down:Connect(function()
+        if u306 ~= false then
+            u306 = false
+        else
+            u306 = true
+        end
+        if u306 == true then
+            local v307, v308, v309 = pairs(game.Players.LocalPlayer.Character:GetDescendants())
+
+            while true do
+                local v310
+
+                v309, v310 = v307(v308, v309)
+
+                if v309 == nil then
+                    break
+                end
+                if v310:IsA('BasePart') then
+                    v310.Material = Enum.Material.ForceField
+                end
+            end
+
+            _LocalScript23.Parent.Parent.Toggle13.Position = UDim2.new(0.5, 0, 0, 0)
+            _LocalScript23.Parent.Parent.Toggle13.BackgroundColor3 = Color3.fromRGB(75, 0, 255)
+        end
+        if u306 == false then
+            local v311, v312, v313 = pairs(game.Players.LocalPlayer.Character:GetDescendants())
+
+            while true do
+                local v314
+
+                v313, v314 = v311(v312, v313)
+
+                if v313 == nil then
+                    break
+                end
+                if v314:IsA('BasePart') then
+                    v314.Material = Enum.Material.Plastic
+                end
+            end
+
+            _LocalScript23.Parent.Parent.Toggle13.Position = UDim2.new(0, 0, 0, 0)
+            _LocalScript23.Parent.Parent.Toggle13.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        end
+    end)
+end
+
+coroutine.wrap(v315)()
+
+local function v326()
+    local _LocalScript24 = Instance.new('LocalScript', _TextButton22)
+    local u317 = false
+
+    _LocalScript24.Parent.MouseButton1Down:Connect(function()
+        if u317 ~= false then
+            u317 = false
+        else
+            u317 = true
+        end
+        if u317 == true then
+            local v318, v319, v320 = pairs(game:GetService('Workspace').Players:GetDescendants())
+
+            while true do
+                local v321
+
+                v320, v321 = v318(v319, v320)
+
+                if v320 == nil then
+                    break
+                end
+                if v321:IsA('BasePart') then
+                    v321.Material = Enum.Material.ForceField
+                end
+            end
+
+            _LocalScript24.Parent.Parent.Toggle14.Position = UDim2.new(0.5, 0, 0, 0)
+            _LocalScript24.Parent.Parent.Toggle14.BackgroundColor3 = Color3.fromRGB(75, 0, 255)
+        end
+        if u317 == false then
+            local v322, v323, v324 = pairs(game:GetService('Workspace').Players:GetDescendants())
+
+            while true do
+                local v325
+
+                v324, v325 = v322(v323, v324)
+
+                if v324 == nil then
+                    break
+                end
+                if v325:IsA('BasePart') then
+                    v325.Material = Enum.Material.Plastic
+                end
+            end
+
+            _LocalScript24.Parent.Parent.Toggle14.Position = UDim2.new(0, 0, 0, 0)
+            _LocalScript24.Parent.Parent.Toggle14.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        end
+    end)
+end
+
+coroutine.wrap(v326)()
+
+local function v331()
+    local _LocalScript25 = Instance.new('LocalScript', _TextButton23)
+    local u328 = false
+
+    _LocalScript25.Parent.MouseButton1Down:Connect(function()
+        if u328 ~= false then
+            u328 = false
+        else
+            u328 = true
+        end
+        if u328 == true then
+            game:GetService('RunService'):BindToRenderStep('NoSlowdown', 0, function()
+                local _LocalPlayer3 = game.Players.LocalPlayer
+                local v330 = _LocalPlayer3.Character.BodyEffects.Movement:FindFirstChild('NoJumping') or (_LocalPlayer3.Character.BodyEffects.Movement:FindFirstChild('ReduceWalk') or _LocalPlayer3.Character.BodyEffects.Movement:FindFirstChild('NoWalkSpeed'))
+
+                if v330 then
+                    v330:Destroy()
+                end
+                if _LocalPlayer3.Character.BodyEffects.Reload.Value == true then
+                    _LocalPlayer3.Character.BodyEffects.Reload.Value = false
+                end
+            end)
+
+            _LocalScript25.Parent.Parent.Toggle15.Position = UDim2.new(0.5, 0, 0, 0)
+            _LocalScript25.Parent.Parent.Toggle15.BackgroundColor3 = Color3.fromRGB(75, 0, 255)
+        end
+        if u328 == false then
+            game:GetService('RunService'):UnbindFromRenderStep('NoSlowdown')
+
+            _LocalScript25.Parent.Parent.Toggle15.Position = UDim2.new(0, 0, 0, 0)
+            _LocalScript25.Parent.Parent.Toggle15.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        end
+    end)
+end
+
+coroutine.wrap(v331)()
+
+local function v334()
+    local _LocalScript26 = Instance.new('LocalScript', _TextButton24)
+    local u333 = false
+
+    _LocalScript26.Parent.MouseButton1Down:Connect(function()
+        if u333 ~= false then
+            u333 = false
+        else
+            u333 = true
+        end
+        if u333 == true then
+            game:GetService('RunService'):BindToRenderStep('NoJumpCoolDown', 0, function()
+                game.Players.LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid').JumpPower = 50
+                game.Players.LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid').Jump = true
+                game.Players.LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid').JumpPower = 50
+            end)
+
+            _LocalScript26.Parent.Parent.Toggle16.Position = UDim2.new(0.5, 0, 0, 0)
+            _LocalScript26.Parent.Parent.Toggle16.BackgroundColor3 = Color3.fromRGB(75, 0, 255)
+        end
+        if u333 == false then
+            game:GetService('RunService'):UnbindFromRenderStep('NoJumpCoolDown')
+
+            _LocalScript26.Parent.Parent.Toggle16.Position = UDim2.new(0, 0, 0, 0)
+            _LocalScript26.Parent.Parent.Toggle16.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        end
+    end)
+end
+
+coroutine.wrap(v334)()
+
+local function v341()
+    local _LocalScript27 = Instance.new('LocalScript', _TextButton25)
+    local u336 = false
+
+    _LocalScript27.Parent.MouseButton1Down:Connect(function()
+        if u336 ~= false then
+            u336 = false
+        else
+            u336 = true
+        end
+        if u336 == true then
+            game:GetService('RunService'):BindToRenderStep('CashAura', 0, function()
+                local v337, v338, v339 = pairs(game:GetService('Workspace').Ignored.Drop:GetChildren())
+
+                while true do
+                    local v340
+
+                    v339, v340 = v337(v338, v339)
+
+                    if v339 == nil then
+                        break
+                    end
+                    if v340:IsA('Part') and (v340.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <= 12 then
+                        fireclickdetector(v340:FindFirstChild('ClickDetector'))
+                    end
+                end
+            end)
+
+            _LocalScript27.Parent.Parent.Toggle17.Position = UDim2.new(0.5, 0, 0, 0)
+            _LocalScript27.Parent.Parent.Toggle17.BackgroundColor3 = Color3.fromRGB(75, 0, 255)
+        end
+        if u336 == false then
+            game:GetService('RunService'):UnbindFromRenderStep('CashAura')
+
+            _LocalScript27.Parent.Parent.Toggle17.Position = UDim2.new(0, 0, 0, 0)
+            _LocalScript27.Parent.Parent.Toggle17.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        end
+    end)
+end
+
+coroutine.wrap(v341)()
+
+local function v343()
+    local _LocalScript28 = Instance.new('LocalScript', _TextButton26)
+
+    _LocalScript28.Parent.MouseButton1Down:Connect(function()
+        _LocalScript28.Parent.Parent.AimbotPage.Visible = false
+        _LocalScript28.Parent.Parent.TargetPage.Visible = false
+        _LocalScript28.Parent.Parent.VisualizePage.Visible = false
+        _LocalScript28.Parent.Parent.SkyboxPage.Visible = true
+    end)
+end
+
+coroutine.wrap(v343)()
+
+local function v348()
+    local _LocalScript29 = Instance.new('LocalScript', _TextButton27)
+    local u345 = false
+
+    _LocalScript29.Parent.MouseButton1Down:Connect(function()
+        if u345 ~= false then
+            u345 = false
+        else
+            u345 = true
+        end
+        if u345 == true then
+            local _Sky = Instance.new('Sky', game:GetService('Lighting'))
+
+            _Sky.MoonTextureId = 'rbxasset://sky/moon.jpg'
+            _Sky.SunTextureId = 'rbxasset://sky/sun.jpg'
+            _Sky.SkyboxBk = 'rbxassetid://190881219'
+            _Sky.SkyboxDn = 'rbxassetid://190881427'
+            _Sky.SkyboxFt = 'rbxassetid://190881366'
+            _Sky.SkyboxLf = 'rbxassetid://190881583'
+            _Sky.SkyboxRt = 'rbxassetid://190881640'
+            _Sky.SkyboxUp = 'rbxassetid://190881519'
+            _LocalScript29.Parent.Parent.SkyBoxToggle1.Position = UDim2.new(0.5, 0, 0, 0)
+            _LocalScript29.Parent.Parent.SkyBoxToggle1.BackgroundColor3 = Color3.fromRGB(75, 0, 255)
+        end
+        if u345 == false then
+            local _Sky2 = Instance.new('Sky', game:GetService('Lighting'))
+
+            _Sky2.MoonTextureId = 'rbxasset://sky/moon.jpg'
+            _Sky2.SunTextureId = 'rbxasset://sky/sun.jpg'
+            _Sky2.SkyboxBk = 'rbxassetid://600830446'
+            _Sky2.SkyboxDn = 'rbxassetid://600831635'
+            _Sky2.SkyboxFt = 'rbxassetid://600832720'
+            _Sky2.SkyboxLf = 'rbxassetid://600886090'
+            _Sky2.SkyboxRt = 'rbxassetid://600833862'
+            _Sky2.SkyboxUp = 'rbxassetid://600835177'
+            _LocalScript29.Parent.Parent.SkyBoxToggle1.Position = UDim2.new(0, 0, 0, 0)
+            _LocalScript29.Parent.Parent.SkyBoxToggle1.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        end
+    end)
+end
+
+coroutine.wrap(v348)()
+
+local function v353()
+    local _LocalScript30 = Instance.new('LocalScript', _TextButton28)
+    local u350 = false
+
+    _LocalScript30.Parent.MouseButton1Down:Connect(function()
+        if u350 ~= false then
+            u350 = false
+        else
+            u350 = true
+        end
+        if u350 == true then
+            local _Sky3 = Instance.new('Sky', game:GetService('Lighting'))
+
+            _Sky3.MoonTextureId = 'rbxasset://sky/moon.jpg'
+            _Sky3.SunTextureId = 'rbxasset://sky/sun.jpg'
+            _Sky3.SkyboxBk = 'rbxassetid://1045964490'
+            _Sky3.SkyboxDn = 'rbxassetid://1045964368'
+            _Sky3.SkyboxFt = 'rbxassetid://1045964655'
+            _Sky3.SkyboxLf = 'rbxassetid://1045964655'
+            _Sky3.SkyboxRt = 'rbxassetid://1045964655'
+            _Sky3.SkyboxUp = 'rbxassetid://1045962969'
+            _LocalScript30.Parent.Parent.SkyBoxToggle2.Position = UDim2.new(0.5, 0, 0, 0)
+            _LocalScript30.Parent.Parent.SkyBoxToggle2.BackgroundColor3 = Color3.fromRGB(75, 0, 255)
+        end
+        if u350 == false then
+            local _Sky4 = Instance.new('Sky', game:GetService('Lighting'))
+
+            _Sky4.MoonTextureId = 'rbxasset://sky/moon.jpg'
+            _Sky4.SunTextureId = 'rbxasset://sky/sun.jpg'
+            _Sky4.SkyboxBk = 'rbxassetid://600830446'
+            _Sky4.SkyboxDn = 'rbxassetid://600831635'
+            _Sky4.SkyboxFt = 'rbxassetid://600832720'
+            _Sky4.SkyboxLf = 'rbxassetid://600886090'
+            _Sky4.SkyboxRt = 'rbxassetid://600833862'
+            _Sky4.SkyboxUp = 'rbxassetid://600835177'
+            _LocalScript30.Parent.Parent.SkyBoxToggle2.Position = UDim2.new(0, 0, 0, 0)
+            _LocalScript30.Parent.Parent.SkyBoxToggle2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        end
+    end)
+end
+
+coroutine.wrap(v353)()
+
+local function v358()
+    local _LocalScript31 = Instance.new('LocalScript', _TextButton29)
+    local u355 = false
+
+    _LocalScript31.Parent.MouseButton1Down:Connect(function()
+        if u355 ~= false then
+            u355 = false
+        else
+            u355 = true
+        end
+        if u355 == true then
+            local _Sky5 = Instance.new('Sky', game:GetService('Lighting'))
+
+            _Sky5.MoonTextureId = 'rbxasset://sky/moon.jpg'
+            _Sky5.SunTextureId = 'rbxasset://sky/sun.jpg'
+            _Sky5.SkyboxBk = 'rbxassetid://159454299'
+            _Sky5.SkyboxDn = 'rbxassetid://159454296'
+            _Sky5.SkyboxFt = 'rbxassetid://159454293'
+            _Sky5.SkyboxLf = 'rbxassetid://159454286'
+            _Sky5.SkyboxRt = 'rbxassetid://159454300'
+            _Sky5.SkyboxUp = 'rbxassetid://159454288'
+            _LocalScript31.Parent.Parent.SkyBoxToggle3.Position = UDim2.new(0.5, 0, 0, 0)
+            _LocalScript31.Parent.Parent.SkyBoxToggle3.BackgroundColor3 = Color3.fromRGB(75, 0, 255)
+        end
+        if u355 == false then
+            local _Sky6 = Instance.new('Sky', game:GetService('Lighting'))
+
+            _Sky6.MoonTextureId = 'rbxasset://sky/moon.jpg'
+            _Sky6.SunTextureId = 'rbxasset://sky/sun.jpg'
+            _Sky6.SkyboxBk = 'rbxassetid://600830446'
+            _Sky6.SkyboxDn = 'rbxassetid://600831635'
+            _Sky6.SkyboxFt = 'rbxassetid://600832720'
+            _Sky6.SkyboxLf = 'rbxassetid://600886090'
+            _Sky6.SkyboxRt = 'rbxassetid://600833862'
+            _Sky6.SkyboxUp = 'rbxassetid://600835177'
+            _LocalScript31.Parent.Parent.SkyBoxToggle3.Position = UDim2.new(0, 0, 0, 0)
+            _LocalScript31.Parent.Parent.SkyBoxToggle3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        end
+    end)
+end
+
+coroutine.wrap(v358)()
